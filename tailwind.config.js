@@ -7,7 +7,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                arvo: ['"Arvo"', 'serif'],
+                ultra: ['"Ultra"', 'serif'],
             },
         },
     },

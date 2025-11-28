@@ -1,48 +1,53 @@
 <template>
-    <div class="landing-container font-sans">
-        <nav
-            class="nav flex flex-wrap justify-between items-center px-5 py-3 shadow-sm sticky top-0 z-50 bg-blue-950/95 backdrop-blur-xl">
-            <div class="text-2xl font-bold flex items-center gap-2 text-white">
-                <a href="#hero" class="font-sans font-bold transition hover:text-indigo-500">
-                    MeetLines
-                </a>
-            </div>
-            <button @click="toggleMenu" class="md:hidden text-white focus:outline-none p-2 rounded hover:bg-white/10">
-                <svg v-if="!menuAbierto" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
-                    </path>
-                </svg>
+    <div class="landing-container font-sans relative">
+        <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl 
+            bg-gray-900/90 backdrop-blur-lg border border-white/10 shadow-2xl 
+            transition-all duration-300 ease-in-out" :class="menuAbierto ? 'rounded-3xl' : 'rounded-full'">
+            <div class=" flex flex-wrap justify-between items-center">
+                <div class="text-xl md:text-2xl font-bold flex items-center gap-2 text-white">
+                    <a href="#hero" class="font-sans font-bold transition hover:text-indigo-400 ml-5">
+                        Meetlines
+                    </a>
+                </div>
+                <button @click="toggleMenu"
+                    class="md:hidden text-white focus:outline-none p-2 rounded-full hover:bg-white/10 transition">
+                    <svg v-if="!menuAbierto" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+                <div class="hidden md:flex space-x-2 items-center">
+                    <router-link to="/login"
+                        class="text-sm font-medium text-gray-300 hover:text-white px-4 py-2 transition">
+                        Ingresar
+                    </router-link>
+                    <router-link to="/register" class="btn-custom text-sm">
+                        Registrarme
+                    </router-link>
+                </div>
+                <div v-show="menuAbierto"
+                    class="w-full md:hidden flex flex-col gap-3 mt-4 pb-2 border-t border-gray-700/50 pt-4 animate-fade-in">
+                    <router-link to="/login"
+                        class="text-white hover:bg-white/10 block px-4 py-3 rounded-xl text-center font-medium">
+                        Ingresar
+                    </router-link>
+                    <router-link to="/register"
+                        class="bg-indigo-600 text-white block px-4 py-3 rounded-xl text-center font-bold shadow-lg">
+                        Registrarme
+                    </router-link>
+                </div>
 
-                <svg v-else class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
-            <div class="hidden md:flex space-x-4 items-center">
-                <router-link to="/login"
-                    class="text-white hover:text-indigo-600 font-medium transition hover:bg-white border-white rounded-full border-2 px-5 py-2 text-center">
-                    Ingresar
-                </router-link>
-                <router-link to="/register" class="btn-custom">
-                    Registrarme
-                </router-link>
-            </div>
-            <div v-show="menuAbierto"
-                class="w-full md:hidden flex flex-col gap-4 mt-4 pb-4 border-t border-gray-700 pt-4 animate-fade-in-down">
-                <router-link to="/login"
-                    class="text-white hover:bg-white/10 block px-4 py-2 rounded-lg text-center border border-white/30">
-                    Ingresar
-                </router-link>
-                <router-link to="/register" class="btn-custom text-center block">
-                    Registrarme
-                </router-link>
             </div>
         </nav>
 
         <header id="hero"
             class="hero-bg flex flex-col justify-center md:items-start sm:items-center px-16 text-white h-svh">
             <h1
-                class="text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-widest mb-6 leading-tight font-arvo italic text-center">
+                class="text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-widest mb-6 leading-tight font-ultra italic text-center">
                 Meet<span class="underline block sm:inline">Lines</span>
             </h1>
             <p class="text-lg md:text-xl mb-8 max-w-2xl font-arvo hidden md:block">
@@ -151,7 +156,7 @@ const toggleMenu = () => {
 </script>
 
 <style scoped>
-.landing-container{
+.landing-container {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -164,7 +169,7 @@ const toggleMenu = () => {
     background-repeat: no-repeat;
 }
 
-.font-arvo {
+.font-ultra {
     text-shadow: 3px 3px 10px black;
 }
 
