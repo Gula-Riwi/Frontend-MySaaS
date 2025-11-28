@@ -1,37 +1,57 @@
 <template>
-    <div class="landing-container min-h-screen flex flex-col font-sans">
-
-        <!-- 1. NAVBAR -->
-        <!-- Tailwind: flex, justify-between, padding, fondo blanco, sombra suave -->
-        <nav class="flex justify-between items-center p-6 bg-white shadow-sm sticky top-0 z-50">
-            <div class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
-                🤖 ChatBot IA
+    <div class="landing-container font-sans">
+        <nav
+            class="nav flex flex-wrap justify-between items-center px-5 py-3 shadow-sm sticky top-0 z-50 bg-blue-950/95 backdrop-blur-xl">
+            <div class="text-2xl font-bold flex items-center gap-2 text-white">
+                <a href="#hero" class="font-sans font-bold transition hover:text-indigo-500">
+                    MeetLines
+                </a>
             </div>
-            <div class="space-x-4">
-                <router-link to="/login" class="text-gray-600 hover:text-indigo-600 font-medium transition">
+            <button @click="toggleMenu" class="md:hidden text-white focus:outline-none p-2 rounded hover:bg-white/10">
+                <svg v-if="!menuAbierto" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+
+                <svg v-else class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <div class="hidden md:flex space-x-4 items-center">
+                <router-link to="/login"
+                    class="text-white hover:text-indigo-600 font-medium transition hover:bg-white border-white rounded-full border-2 px-5 py-2 text-center">
                     Ingresar
                 </router-link>
-                <!-- Botón con estilos híbridos -->
                 <router-link to="/register" class="btn-custom">
-                    Registrarse Gratis
+                    Registrarme
+                </router-link>
+            </div>
+            <div v-show="menuAbierto"
+                class="w-full md:hidden flex flex-col gap-4 mt-4 pb-4 border-t border-gray-700 pt-4 animate-fade-in-down">
+                <router-link to="/login"
+                    class="text-white hover:bg-white/10 block px-4 py-2 rounded-lg text-center border border-white/30">
+                    Ingresar
+                </router-link>
+                <router-link to="/register" class="btn-custom text-center block">
+                    Registrarme
                 </router-link>
             </div>
         </nav>
 
-        <!-- 2. HERO SECTION -->
-        <!-- Tailwind para estructura: text-center, padding vertical -->
-        <!-- Clase 'hero-bg' personalizada para el fondo -->
-        <header class="hero-bg flex-1 flex flex-col justify-center items-center text-center px-4 py-20 text-white">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                Automatiza tus pedidos <br />
-                <span class="text-yellow-300">mientras duermes</span>
+        <header id="hero"
+            class="hero-bg flex flex-col justify-center md:items-start sm:items-center px-16 text-white h-svh">
+            <h1
+                class="text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-widest mb-6 leading-tight font-arvo italic text-center">
+                Meet<span class="underline block sm:inline">Lines</span>
             </h1>
-            <p class="text-lg md:text-xl mb-8 max-w-2xl opacity-90">
+            <p class="text-lg md:text-xl mb-8 max-w-2xl font-arvo hidden md:block">
                 La herramienta definitiva para freelancers y PyMEs.
                 Deja que nuestra IA gestione tus clientes 24/7.
             </p>
-            <div class="flex gap-4">
-                <router-link to="/register" class="btn-custom bg-white text-indigo-700 hover:bg-gray-100 border-none">
+            <div class="flex flex-col md:flex-row gap-4">
+                <router-link to="/register"
+                    class="btn-custom bg-white text-indigo-700 hover:bg-gray-100 hover:text-indigo-600 border-none text-center w-25">
                     Empezar Ahora
                 </router-link>
                 <button
@@ -41,7 +61,6 @@
             </div>
         </header>
 
-        <!-- 3. FUNCIONES (Grid System) -->
         <section class="py-20 bg-gray-50">
             <div class="max-w-6xl mx-auto px-6">
                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">¿Por qué elegirnos?</h2>
@@ -121,33 +140,35 @@ const planes = ref([
         features: ['3 Chatbots', 'Conversaciones ilimitadas', 'Dashboard Pro', 'Soporte Prioritario']
     }
 ]);
+
+
+//menu
+const menuAbierto = ref(false);
+const toggleMenu = () => {
+    menuAbierto.value = !menuAbierto.value;
+};
+
 </script>
 
 <style scoped>
-/* --- AQUÍ ENTRA TU TOQUE ORIGINAL --- */
+.landing-container{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-/* 1. Fondo Degradado Animado */
 .hero-bg {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+    background-image: url("../img/hero.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
+.font-arvo {
+    text-shadow: 3px 3px 10px black;
 }
 
-/* 2. Botón Personalizado (Reutilizable) */
+
 .btn-custom {
     background-color: #4F46E5;
     /* Indigo 600 */
