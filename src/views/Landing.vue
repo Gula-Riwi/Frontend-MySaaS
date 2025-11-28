@@ -1,11 +1,11 @@
 <template>
     <div class="landing-container font-sans relative">
         <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl 
-            bg-gray-900/90 backdrop-blur-lg border border-white/10 shadow-2xl 
+            bg-gray-900/60 backdrop-blur-lg border border-white/10 shadow-2xl 
             transition-all duration-300 ease-in-out" :class="menuAbierto ? 'rounded-3xl' : 'rounded-full'">
             <div class=" flex flex-wrap justify-between items-center">
                 <div class="text-xl md:text-2xl font-bold flex items-center gap-2 text-white">
-                    <a href="#hero" class="font-sans font-bold transition hover:text-indigo-400 ml-5">
+                    <a href="#hero" class="font-sans font-bold transition hover:text-indigo-400 ml-5 italic">
                         Meetlines
                     </a>
                 </div>
@@ -47,7 +47,7 @@
         <header id="hero"
             class="hero-bg flex flex-col justify-center md:items-start sm:items-center px-16 text-white h-svh">
             <h1
-                class="text-7xl md:text-8xl lg:text-9xl tracking-widest mb-6 leading-tight font-ultra italic text-center">
+                class="tracking-wide mb-6 font-league text-center italic">
                 Meet<span class="underline block sm:inline">Lines</span>
             </h1>
             <p class="text-lg md:text-xl mb-8 max-w-2xl font-arvo hidden md:block">
@@ -169,8 +169,8 @@ const toggleMenu = () => {
     background-repeat: no-repeat;
 }
 
-.font-ultra {
-    text-shadow: 3px 3px 10px black;
+.font-league {
+    font-size: 20rem;
 }
 
 

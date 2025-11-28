@@ -7,7 +7,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                ultra: ['"Ultra"', 'serif'],
+                league: ['"League Gothic"', 'sans-serif'],
             },
         },
     },
