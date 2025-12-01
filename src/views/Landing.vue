@@ -48,12 +48,12 @@
         <header id="hero"
             class="relative flex flex-col justify-center md:items-start sm:items-center px-6 md:px-16 text-white min-h-svh bg-blue-950 overflow-hidden pt-32 md:pt-0">
 
-            <div class="relative z-10 w-full max-w-[90%] mx-auto md:mx-0">
-                <h1 class="font-league italic font-bold leading-none mb-6 text-center md:text-left">
+            <div class="relative z-10 mx-auto md:mx-0">
+                <h1 class="font-league italic font-bold leading-none mb-6 tracking-wide">
                     Meet
-                    <div class="block sm:inline-block">
+                    <span class="block sm:inline-block">
                         <LineShadowText shadowColor="white">Lines</LineShadowText>
-                    </div>
+                    </span>
                 </h1>
 
                 <TextGenerateEffect
@@ -91,7 +91,12 @@
                         <template #back>
                             <div class="flex min-h-full flex-col justify-center items-center gap-2 p-4">
                                 <p class="text-xl leading-normal text-indigo-400 text-center font-bold">
-                                    Respuestas automáticas 24/7 impulsadas por IA avanzada.
+                                    Respuestas automáticas 24/7 impulsadas por
+                                    <TextHighlight
+                                        class="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg text-white"
+                                        textEndColor="white" :delay="1000">
+                                        IA avanzada.
+                                    </TextHighlight>
                                 </p>
                             </div>
                         </template>
@@ -110,7 +115,12 @@
                         <template #back>
                             <div class="flex min-h-full flex-col justify-center items-center gap-2 p-4">
                                 <p class="text-xl leading-normal text-indigo-400 text-center font-bold">
-                                    Mejora tu productividad con tu propio asistente.
+                                    Mejora tu 
+                                    <TextHighlight
+                                        class="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg text-white"
+                                        textEndColor="white" :delay="1000">
+                                        productividad
+                                    </TextHighlight> con tu propio asistente.
                                 </p>
                             </div>
                         </template>
@@ -219,46 +229,41 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 justify-items-center">
                     <div v-for="plan in planes" :key="plan.nombre" class="p-0 md:p-8 flex justify-center w-full">
-                        <GlareCard class="flex flex-col justify-center items-center">
-                            <h3 class="text-4xl mt-4 tracking-wider text-white font-league">{{ plan.nombre }}</h3>
-                            <div>
-                                <span class="text-4xl font-extrabold text-indigo-500">$</span>
-                                <NumberTicker :value=plan.precio :decimalPlaces="0"
-                                    class="text-4xl font-extrabold text-indigo-500 my-4" />
-                                <span class="text-gray-300 text-md">/mes</span>
-                            </div>
-                            <div class="flex-1 p-6 w-full">
-                                <ul class="space-y-4">
-                                    <li v-for="feature in plan.features" :key="feature" class="flex items-start gap-3">
-                                        <div
-                                            class="mt-1 bg-indigo-500/20 p-1 rounded-full text-indigo-400 flex-shrink-0">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                                    d="M5 13l4 4L19 7"></path>
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-300 text-sm leading-snug">
-                                            {{ feature }}
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <ShimmerButton class="font-bold mb-5" shimmer-size="2px" background="#312e81"
-                                shimmerColor="#818cf8">
-                                <span
-                                    class="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white lg:text-lg dark:from-white dark:to-slate-900/10">
-                                    Elegir Plan
-                                </span>
-                            </ShimmerButton>
-                        </GlareCard>
+                        <router-link to="/register" class="group cursor-pointer w-full max-w-[350px]">
+                            <GlareCard class="flex flex-col justify-center items-center bg-blue-950">
+                                <h3 class="text-4xl mt-4 tracking-wider text-white font-league">{{ plan.nombre }}</h3>
+                                <div>
+                                    <span class="text-4xl font-extrabold text-indigo-500">$</span>
+                                    <NumberTicker :value=plan.precio :decimalPlaces="0"
+                                        class="text-4xl font-extrabold text-indigo-500 my-4" />
+                                    <span class="text-gray-300 text-md">/mes</span>
+                                </div>
+                                <div class="flex-1 p-6 w-full">
+                                    <ul class="space-y-4">
+                                        <li v-for="feature in plan.features" :key="feature"
+                                            class="flex items-center justify-start gap-3">
+                                            <div class="mt-1 bg-indigo-500 p-1 rounded-full text-white flex-shrink-0">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                            </div>
+                                            <span class="text-white leading-snug">
+                                                {{ feature }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </GlareCard>
+                        </router-link>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Footer Simple -->
         <footer class="bg-gray-900 text-white py-8 text-center">
-            <p>© 2024 ChatBot IA - Hecho con Vue y Tailwind</p>
+            <p>© 2025 Meetlines</p>
         </footer>
 
     </div>
@@ -274,7 +279,7 @@ import FlipCard from '@/components/FlipCard.vue';
 import TextReveal from '@/components/TextReveal.vue';
 import GlareCard from '@/components/GlareCard.vue';
 import NumberTicker from '@/components/NumberTicker.vue';
-import ShimmerButton from '@/components/ShimmerButton.vue';
+import TextHighlight from '@/components/TextHighlight.vue';
 
 
 const features = ref([
