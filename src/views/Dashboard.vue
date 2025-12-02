@@ -1,7 +1,5 @@
 <template>
     <div class="dashboard-layout">
-
-        <!-- 1. SIDEBAR (Menú Lateral) -->
         <Sidebar />
 
         <!-- 2. CONTENIDO PRINCIPAL -->

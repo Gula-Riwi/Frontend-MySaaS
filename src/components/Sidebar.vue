@@ -34,7 +34,6 @@ const Logout = () => {
 </script>
 
 <style scoped>
-/* Aquí traemos SOLO los estilos que tienen que ver con la barra lateral */
 .sidebar {
     width: 250px;
     background-color: #2c3e50;
@@ -42,7 +41,6 @@ const Logout = () => {
     display: flex;
     flex-direction: column;
     height: 100%;
-    /* Importante para que ocupe el alto del padre */
 }
 
 .sidebar-header {
