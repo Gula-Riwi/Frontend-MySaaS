@@ -222,13 +222,13 @@
 
         <!-- 4. PLANES -->
         <section class="py-20 bg-gray-400">
-            <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="max-w-7xl mx-auto px-4 text-center">
                 <TextReveal class="text-5xl md:text-9xl font-bold font-league tracking-wide text-black mb-10">
                     Nuestros Planes
                 </TextReveal>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 justify-items-center">
-                    <div v-for="plan in planes" :key="plan.nombre" class="p-0 md:p-8 flex justify-center w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-items-center">
+                    <div v-for="plan in planes" :key="plan.nombre" class="p-0  flex justify-center w-full">
                         <router-link to="/register" class="group cursor-pointer w-full max-w-[350px]">
                             <GlareCard class="flex flex-col justify-center items-center bg-blue-950">
                                 <h3 class="text-4xl mt-4 tracking-wider text-white font-league">{{ plan.nombre }}</h3>
@@ -312,14 +312,19 @@ const features = ref([
 
 const planes = ref([
     {
-        nombre: 'Freelancer',
-        precio: 0,
-        features: ['1 Chatbot', '50 conversaciones/mes', 'Soporte por correo']
+        nombre: 'Básico',
+        precio: 20,
+        features: ['1 Chatbot', '1 empresa', 'Free trial 2 meses ']
     },
     {
-        nombre: 'Pyme',
-        precio: 29,
-        features: ['3 Chatbots', 'Conversaciones ilimitadas', 'Dashboard Pro', 'Soporte Prioritario']
+        nombre: 'Estándar',
+        precio: 50,
+        features: ['3 Chatbots', '2 empresas']
+    },
+    {
+        nombre: 'Empresarial',
+        precio: 100,
+        features: ['4 Chatbots', 'Empresas ilimitadas']
     }
 ]);
 
@@ -339,17 +344,9 @@ const toggleMenu = () => {
     padding: 0;
 }
 
-/* 
-   SOLUCIÓN AL TAMAÑO DE LA FUENTE:
-   Usamos 'clamp'. 
-   - 5rem: Tamaño mínimo en celular.
-   - 15vw: Tamaño ideal (crece con la pantalla).
-   - 20rem: Tamaño máximo (el que querías para Desktop).
-*/
 h1.font-league {
     font-size: clamp(10rem, 20vw, 20rem);
     line-height: 1;
-    /* Importante para que no ocupe demasiado alto */
 }
 
 
@@ -369,21 +366,12 @@ h1.font-league {
     box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
 
-/* 
-   GRID RESPONSIVO MANUAL 
-   ---------------------------------
-   1. Por defecto (Móvil): Flex Column (Columna simple)
-*/
 .features {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-/* 
-   2. Solo en Desktop (>= 1024px): Activamos tu Grid personalizado.
-   Esto conserva tu diseño desktop intacto sin romper el móvil.
-*/
 @media (min-width: 1024px) {
     .features {
         display: grid;
@@ -392,9 +380,7 @@ h1.font-league {
         grid-column-gap: 5px;
         grid-row-gap: 15px;
         height: auto;
-        /* Dejar que crezca según contenido */
         min-height: 1000px;
-        /* Altura sugerida para que el grid se vea bien */
     }
 
     .feature-1 {
