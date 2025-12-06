@@ -10,6 +10,7 @@ import ForgotPassword from '../views/ForgotPassword.vue';
 import ResetPassword from '../views/ResetPassword.vue';
 import CheckEmail from '../views/CheckEmail.vue';
 import Profile from '../views/Profile.vue';
+import ProjectsList from '../views/ProjectsList.vue'; 
 
 
 const routes = [
@@ -47,7 +48,13 @@ const routes = [
     name: 'Profile', 
     component: Profile,
     meta: { requiresAuth: true } 
-  }
+  },
+  { 
+    path: '/projects', 
+    name: 'ProjectsList', 
+    component: ProjectsList,
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = createRouter({

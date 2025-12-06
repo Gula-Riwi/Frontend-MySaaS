@@ -153,7 +153,7 @@ const Login = async () => {
                 id: userId
             };
             localStorage.setItem('user', JSON.stringify(userData));
-            router.push('/dashboard');
+            router.push('/projects');
 
         } else {
             errorMsg.value = response.message || "Credenciales incorrectas.";
@@ -199,7 +199,7 @@ const loginWithGoogle = () => {
                     Cookies.set('auth_token', accessToken, { expires: 1, secure: true, sameSite: 'Strict' });
                     Cookies.set('refresh_token', refreshToken, { expires: 7, secure: true, sameSite: 'Strict' });
                     localStorage.setItem('user', JSON.stringify({ name, email, id: userId }));
-                    router.push('/dashboard');
+                    router.push('/projects');
                 } else {
                     errorMsg.value = apiResponse.message || "Error al iniciar con Google.";
                 }

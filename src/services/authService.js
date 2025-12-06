@@ -59,5 +59,15 @@ export default {
     async getProfile() {
         const response = await api.get('/Profile');
         return response.data;
+    },
+
+    async updateProfile(data) {
+        const response = await api.put('/Profile', data);
+        return response.data;
+    },
+
+    async changePassword(data) {
+        const response = await api.put('/Profile/change-password', data);
+        return response.data;
     }
 };
