@@ -104,6 +104,9 @@
                             <option value="" disabled>Selecciona un tipo</option>
                             <option value="instagram">Instagram</option>
                             <option value="facebook">Facebook</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="x">X (Twitter)</option>
+                            <option value="threads">Threads</option>
                             <option value="whatsapp">WhatsApp</option>
                             <option value="telegram">Telegram</option>
                             <option value="discord">Discord</option>
@@ -178,6 +181,10 @@ const getChannelIcon = (type) => {
     const map = {
         'instagram': '📸',
         'facebook': '👍',
+        'tiktok': '🎵',
+        'x': '✖️',
+        'twitter': '🐦',
+        'threads': '🧵',
         'whatsapp': '💬',
         'telegram': '✈️',
         'discord': '🎮',
@@ -205,6 +212,9 @@ const getValueLabel = () => {
 const getValuePlaceholder = () => {
     const t = form.value.type;
     if (t === 'instagram') return 'Ej: https://instagram.com/mi_negocio';
+    if (t === 'tiktok') return 'Ej: https://tiktok.com/@mi_negocio';
+    if (t === 'x') return 'Ej: https://x.com/mi_negocio';
+    if (t === 'threads') return 'Ej: https://threads.net/@mi_negocio';
     if (t === 'whatsapp') return 'Ej: https://wa.me/573001234567';
     return 'Ej: https://...';
 };
