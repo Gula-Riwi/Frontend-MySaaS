@@ -178,7 +178,6 @@
                                 <textarea v-model="config.receptionConfig.welcomeMessage" rows="3"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                     placeholder="¡Hola! Soy {botName}..."></textarea>
-                                <p class="text-xs text-gray-500 mt-1">Usa {botName} y {businessName} como variables</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Palabras Clave de Intención</label>
@@ -195,14 +194,8 @@
                                 <label class="block text-sm font-medium mb-2">Mensaje Fuera de Horario</label>
                                 <textarea v-model="config.receptionConfig.outOfHoursMessage" rows="2"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
-                                <p class="text-xs text-gray-500 mt-1">Usa {hours} para insertar el horario.</p>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Prompt Personalizado (Sistema)</label>
-                                <textarea v-model="config.receptionConfig.customPrompt" rows="3"
-                                    class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
-                                    placeholder="Instrucciones adicionales para la IA..."></textarea>
-                            </div>
+
                         </div>
                     </div>
 
@@ -269,21 +262,15 @@
                                     <label class="block text-sm font-medium mb-2">Mensaje de Confirmación</label>
                                     <textarea v-model="config.transactionalConfig.confirmationMessage" rows="2"
                                         class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
-                                    <p class="text-xs text-gray-500 mt-1">Variables: {date}, {time}</p>
                                 </div>
                                 <div v-if="config.transactionalConfig.sendReminder">
                                     <label class="block text-sm font-medium mb-2">Mensaje de Recordatorio</label>
                                     <textarea v-model="config.transactionalConfig.reminderMessage" rows="2"
                                         class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
-                                    <p class="text-xs text-gray-500 mt-1">Variables: {time}</p>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Prompt Personalizado (Sistema)</label>
-                                    <textarea v-model="config.transactionalConfig.customPrompt" rows="3"
-                                        class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
-                                        placeholder="Instrucciones adicionales para la IA..."></textarea>
-                                </div>
+
                             </div>
+                        </div>
                     </div>
 
                     <!-- Feedback Bot -->
@@ -314,7 +301,6 @@
                                 <textarea v-model="config.feedbackConfig.requestMessage" rows="2"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                     placeholder="Hola {customerName}, ¿cómo calificarías tu experiencia?"></textarea>
-                                <p class="text-xs text-gray-500 mt-1">Usa {customerName} como variable</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Mensaje para Feedback Negativo</label>
@@ -332,12 +318,7 @@
                                     </div>
                                 </label>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Prompt Personalizado (Sistema)</label>
-                                <textarea v-model="config.feedbackConfig.customPrompt" rows="2"
-                                    class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
-                                    placeholder="Instrucciones adicionales para la IA..."></textarea>
-                            </div>
+
                         </div>
                     </div>
 
@@ -390,7 +371,6 @@
                                         + Agregar Mensaje
                                     </button>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">Usa {customerName} y {days} como variables</p>
                             </div>
                             <div class="flex items-center justify-between p-4 bg-gray-800 rounded-xl">
                                 <span class="text-sm">Ofrecer descuento</span>
@@ -415,13 +395,7 @@
                                         placeholder="¡Tenemos un {discount}% de descuento para ti!">
                                 </div>
                             </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Prompt Personalizado (Sistema)</label>
-                                <textarea v-model="config.reactivationConfig.customPrompt" rows="2"
-                                    class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
-                                    placeholder="Instrucciones adicionales para la IA..."></textarea>
-                            </div>
+
                     </div>
 
                     <!-- Advanced Config -->
@@ -607,10 +581,10 @@ const config = ref({
     timezone: 'America/Bogota',
     receptionConfig: {
         enabled: true,
-        welcomeMessage: '¡Hola! Soy {botName}, el asistente virtual de {businessName}. ¿En qué puedo ayudarte?',
+        welcomeMessage: '¡Hola! Soy {botName}, el asistente virtual. ¿En qué puedo ayudarte?',
         intentTriggerKeywords: 'agendar,reservar,cita,comprar',
-        handoffMessage: '¡Perfecto! Te ayudo con eso enseguida 📅',
-        outOfHoursMessage: 'Gracias por contactarnos. Nuestro horario es {hours}. Te responderemos pronto.',
+        handoffMessage: '¡Perfecto! Te ayudo con eso enseguida.',
+        outOfHoursMessage: 'Gracias por contactarnos. Nuestro horario de atención ha terminado. Te responderemos pronto.',
         customPrompt: ''
     },
     transactionalConfig: {
@@ -619,10 +593,10 @@ const config = ref({
         bufferMinutes: 0, // Mapped to bufferBetweenAppointments
         maxAdvanceBookingDays: 30,
         minAdvanceBookingDays: 0,
-        confirmationMessage: '✅ ¡Listo! Tu cita está confirmada para el {date} a las {time}.',
+        confirmationMessage: '✅ ¡Listo! Tu cita está confirmada.',
         sendReminder: true,
         reminderHoursBefore: 24,
-        reminderMessage: 'Hola, te recordamos tu cita mañana a las {time}.',
+        reminderMessage: 'Hola, te recordamos tu cita mañana.',
         allowCancellation: true,
         minCancellationHours: 24,
         businessHours: {}, // initialized in onMounted,
@@ -642,7 +616,7 @@ const config = ref({
         maxAttempts: 3,
         daysBetweenAttempts: 30,
         messages: [
-            'Hola, hace {days} días no te vemos. ¿Te gustaría agendar?',
+            'Hola, hace días no te vemos. ¿Te gustaría agendar?',
             'Hola, ¿cómo has estado? Tenemos disponibilidad esta semana.',
             'Hola, te extrañamos. ¿Podemos ayudarte en algo?'
         ],
