@@ -586,7 +586,7 @@ const config = ref({
     timezone: 'America/Bogota',
     receptionConfig: {
         enabled: true,
-        welcomeMessage: '¡Hola! Soy {botName}, el asistente virtual. ¿En qué puedo ayudarte?',
+        welcomeMessage: '¡Hola! Soy el asistente virtual. ¿En qué puedo ayudarte?',
         intentTriggerKeywords: 'agendar,reservar,cita,comprar',
         handoffMessage: '¡Perfecto! Te ayudo con eso enseguida.',
         outOfHoursMessage: 'Gracias por contactarnos. Nuestro horario de atención ha terminado. Te responderemos pronto.',
