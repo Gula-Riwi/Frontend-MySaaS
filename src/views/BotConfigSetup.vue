@@ -113,6 +113,8 @@
                                 </option>
                             </select>
                         </div>
+                        <!-- Business Hours -->
+
                     </div>
                 </div>
 
@@ -146,15 +148,59 @@
                                 <textarea v-model="config.receptionConfig.welcomeMessage" rows="3"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                     placeholder="¡Hola! Soy {botName}..."></textarea>
-                                <p class="text-xs text-gray-500 mt-1">Usa {botName} y {businessName} como variables</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Palabras Clave de Intención</label>
                                 <input v-model="config.receptionConfig.intentTriggerKeywords" type="text"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
                                     placeholder="agendar,reservar,cita">
-                                <p class="text-xs text-gray-500 mt-1">Separadas por comas</p>
                             </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Mensaje de Transferencia (Handoff)</label>
+                                <textarea v-model="config.receptionConfig.handoffMessage" rows="2"
+                                    class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Mensaje Fuera de Horario</label>
+                                <textarea v-model="config.receptionConfig.outOfHoursMessage" rows="2"
+                                    class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-3">Horario de Atención</label>
+                                <div class="space-y-2">
+                                    <div v-for="(schedule, day) in config.transactionalConfig.businessHours" :key="day"
+                                        class="flex items-center gap-3 bg-gray-800 p-3 rounded-xl border border-white/5">
+                                        
+                                        <!-- Day Toggle -->
+                                        <!-- Day Label -->
+                                        <div class="w-24">
+                                            <span class="text-sm font-medium transition-colors"
+                                                :class="!schedule.closed ? 'text-white' : 'text-gray-500'">
+                                                {{ getDayLabel(day) }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Toggle Switch -->
+                                        <label class="relative inline-flex items-center cursor-pointer mr-4">
+                                            <input type="checkbox" v-model="schedule.closed" :true-value="false" :false-value="true" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        </label>
+
+                                        <!-- Time Inputs -->
+                                        <div v-if="!schedule.closed" class="flex items-center gap-2 flex-1 animate-fade-in">
+                                            <input type="time" v-model="schedule.start"
+                                                class="bg-gray-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                            <span class="text-gray-500 text-sm">a</span>
+                                            <input type="time" v-model="schedule.end"
+                                                class="bg-gray-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                        </div>
+                                        <div v-else class="flex-1 text-sm text-gray-600 italic">
+                                            Cerrado
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -214,6 +260,21 @@
                                     </div>
                                 </label>
                             </div>
+
+                            <!-- Messages Fields -->
+                            <div class="space-y-4 pt-4 border-t border-white/10">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Mensaje de Confirmación</label>
+                                    <textarea v-model="config.transactionalConfig.confirmationMessage" rows="2"
+                                        class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                                </div>
+                                <div v-if="config.transactionalConfig.sendReminder">
+                                    <label class="block text-sm font-medium mb-2">Mensaje de Recordatorio</label>
+                                    <textarea v-model="config.transactionalConfig.reminderMessage" rows="2"
+                                        class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
@@ -245,7 +306,6 @@
                                 <textarea v-model="config.feedbackConfig.requestMessage" rows="2"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                     placeholder="Hola {customerName}, ¿cómo calificarías tu experiencia?"></textarea>
-                                <p class="text-xs text-gray-500 mt-1">Usa {customerName} como variable</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Mensaje para Feedback Negativo</label>
@@ -255,7 +315,7 @@
                             </div>
                             <div class="flex items-center justify-between p-4 bg-gray-800 rounded-xl">
                                 <span class="text-sm">Notificar al dueño si es negativo</span>
-                                <label class="relative inline-flex items-center cursor-pointer">
+                              <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" v-model="config.feedbackConfig.notifyOwnerOnNegative"
                                         class="sr-only peer">
                                     <div
@@ -263,6 +323,7 @@
                                     </div>
                                 </label>
                             </div>
+
                         </div>
                     </div>
 
@@ -315,7 +376,6 @@
                                         + Agregar Mensaje
                                     </button>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">Usa {customerName} y {days} como variables</p>
                             </div>
                             <div class="flex items-center justify-between p-4 bg-gray-800 rounded-xl">
                                 <span class="text-sm">Ofrecer descuento</span>
@@ -526,30 +586,34 @@ const config = ref({
     timezone: 'America/Bogota',
     receptionConfig: {
         enabled: true,
-        welcomeMessage: '¡Hola! Soy {botName}, el asistente virtual de {businessName}. ¿En qué puedo ayudarte?',
+        welcomeMessage: '¡Hola! Soy el asistente virtual. ¿En qué puedo ayudarte?',
         intentTriggerKeywords: 'agendar,reservar,cita,comprar',
-        handoffMessage: '¡Perfecto! Te ayudo con eso enseguida 📅',
-        outOfHoursMessage: 'Gracias por contactarnos. Nuestro horario es {hours}. Te responderemos pronto.'
+        handoffMessage: '¡Perfecto! Te ayudo con eso enseguida.',
+        outOfHoursMessage: 'Gracias por contactarnos. Nuestro horario de atención ha terminado. Te responderemos pronto.',
+        customPrompt: ''
     },
     transactionalConfig: {
         enabled: true,
-        appointmentDurationMinutes: 60,
-        bufferMinutes: 0,
+        appointmentDurationMinutes: 60, // Mapped to slotDuration in backend
+        bufferMinutes: 0, // Mapped to bufferBetweenAppointments
         maxAdvanceBookingDays: 30,
         minAdvanceBookingDays: 0,
-        confirmationMessage: '✅ ¡Listo! Tu cita está confirmada para el {date} a las {time}.',
+        confirmationMessage: '✅ ¡Listo! Tu cita está confirmada.',
         sendReminder: true,
         reminderHoursBefore: 24,
-        reminderMessage: 'Hola {customerName}, te recordamos tu cita mañana a las {time}.',
+        reminderMessage: 'Hola, te recordamos tu cita mañana.',
         allowCancellation: true,
-        minCancellationHours: 24
+        minCancellationHours: 24,
+        businessHours: {}, // initialized in onMounted,
+        customPrompt: ''
     },
     feedbackConfig: {
         enabled: true,
         delayHours: 24,
-        requestMessage: 'Hola {customerName}, ¿cómo calificarías tu experiencia del 1 al 5?',
+        requestMessage: 'Hola, ¿cómo calificarías tu experiencia del 1 al 5?',
         negativeFeedbackMessage: 'Lamentamos eso. ¿Qué podemos mejorar?',
-        notifyOwnerOnNegative: true
+        notifyOwnerOnNegative: true,
+        customPrompt: ''
     },
     reactivationConfig: {
         enabled: true,
@@ -557,13 +621,14 @@ const config = ref({
         maxAttempts: 3,
         daysBetweenAttempts: 30,
         messages: [
-            'Hola {customerName}, hace {days} días no te vemos. ¿Te gustaría agendar?',
-            'Hola {customerName}, ¿cómo has estado? Tenemos disponibilidad esta semana.',
-            'Hola {customerName}, te extrañamos. ¿Podemos ayudarte en algo?'
+            'Hola, hace días no te vemos. ¿Te gustaría agendar?',
+            'Hola, ¿cómo has estado? Tenemos disponibilidad esta semana.',
+            'Hola, te extrañamos. ¿Podemos ayudarte en algo?'
         ],
         offerDiscount: false,
         discountPercentage: 10,
-        discountMessage: '¡Tenemos un {discount}% de descuento para ti!'
+        discountMessage: '¡Tenemos un {discount}% de descuento para ti!',
+        customPrompt: ''
     },
     advancedConfig: {
         humanFallback: true,
@@ -604,7 +669,37 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error loading bot config:', error);
     }
+
+    // Initialize business hours in Transactional Config if missing
+    if (!config.value.transactionalConfig.businessHours || Object.keys(config.value.transactionalConfig.businessHours).length === 0) {
+        config.value.transactionalConfig.businessHours = {
+            'monday': { start: '09:00', end: '18:00', closed: false },
+            'tuesday': { start: '09:00', end: '18:00', closed: false },
+            'wednesday': { start: '09:00', end: '18:00', closed: false },
+            'thursday': { start: '09:00', end: '18:00', closed: false },
+            'friday': { start: '09:00', end: '18:00', closed: false },
+            'saturday': { start: '09:00', end: '13:00', closed: false },
+            'sunday': { start: '09:00', end: '18:00', closed: true }
+        };
+    }
 });
+
+const toggleDay = (day) => {
+    config.value.transactionalConfig.businessHours[day].closed = !config.value.transactionalConfig.businessHours[day].closed;
+};
+
+const getDayLabel = (day) => {
+    const days = {
+        'monday': 'Lunes',
+        'tuesday': 'Martes',
+        'wednesday': 'Miércoles',
+        'thursday': 'Jueves',
+        'friday': 'Viernes',
+        'saturday': 'Sábado',
+        'sunday': 'Domingo'
+    };
+    return days[day] || day;
+};
 
 const selectIndustry = async (industry) => {
     config.value.industry = industry;

@@ -9,6 +9,10 @@ export default {
     async getByProjectId(projectId) {
         try {
             const response = await api.get(`/api/projects/${projectId}/bot-config/my-config`);
+            
+            // 204 No Content means config not exists yet
+            if (response.status === 204) return null;
+            
             return response.data;
         } catch (error) {
             // 404 means config doesn't exist yet

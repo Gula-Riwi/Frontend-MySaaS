@@ -184,7 +184,8 @@ const createProject = async () => {
         }
     } catch (error) {
         console.error("Error creando proyecto:", error);
-        alert("Error al crear el proyecto.");
+        const errorMessage = error.response?.data?.error || "Error al crear el proyecto.";
+        alert(errorMessage);
     } finally {
         isCreating.value = false;
     }
