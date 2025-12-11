@@ -186,7 +186,6 @@
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
                                     placeholder="agendar,reservar,cita">
                             </div>
-                            </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Mensaje de Transferencia (Handoff)</label>
                                 <textarea v-model="config.receptionConfig.handoffMessage" rows="2"
@@ -285,7 +284,6 @@
                                         placeholder="Instrucciones adicionales para la IA..."></textarea>
                                 </div>
                             </div>
-                        </div>
                     </div>
 
                     <!-- Feedback Bot -->
@@ -424,7 +422,6 @@
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                     placeholder="Instrucciones adicionales para la IA..."></textarea>
                             </div>
-                        </div>
                     </div>
 
                     <!-- Advanced Config -->
