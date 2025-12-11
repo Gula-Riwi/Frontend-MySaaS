@@ -114,37 +114,7 @@
                             </select>
                         </div>
                         <!-- Business Hours -->
-                        <div>
-                            <label class="block text-sm font-medium mb-3">Horario de Atención</label>
-                            <div class="space-y-2">
-                                <div v-for="(schedule, index) in config.receptionConfig.businessHours" :key="index"
-                                    class="flex items-center gap-3 bg-gray-800 p-3 rounded-xl border border-white/5">
-                                    
-                                    <!-- Day Toggle -->
-                                    <div class="w-24">
-                                        <label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" v-model="schedule.isOpen" class="sr-only peer">
-                                            <div class="text-sm font-medium transition-colors"
-                                                :class="schedule.isOpen ? 'text-white' : 'text-gray-500'">
-                                                {{ getDayLabel(schedule.day) }}
-                                            </div>
-                                        </label>
-                                    </div>
 
-                                    <!-- Time Inputs -->
-                                    <div v-if="schedule.isOpen" class="flex items-center gap-2 flex-1 animate-fade-in">
-                                        <input type="time" v-model="schedule.startTime"
-                                            class="bg-gray-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-indigo-500">
-                                        <span class="text-gray-500 text-sm">a</span>
-                                        <input type="time" v-model="schedule.endTime"
-                                            class="bg-gray-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-indigo-500">
-                                    </div>
-                                    <div v-else class="flex-1 text-sm text-gray-600 italic">
-                                        Cerrado
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -194,6 +164,37 @@
                                 <label class="block text-sm font-medium mb-2">Mensaje Fuera de Horario</label>
                                 <textarea v-model="config.receptionConfig.outOfHoursMessage" rows="2"
                                     class="w-full px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-3">Horario de Atención</label>
+                                <div class="space-y-2">
+                                    <div v-for="(schedule, day) in config.transactionalConfig.businessHours" :key="day"
+                                        class="flex items-center gap-3 bg-gray-800 p-3 rounded-xl border border-white/5">
+                                        
+                                        <!-- Day Toggle -->
+                                        <div class="w-24">
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" v-model="schedule.closed" :true-value="false" :false-value="true" class="sr-only peer">
+                                                <div class="text-sm font-medium transition-colors"
+                                                    :class="!schedule.closed ? 'text-white' : 'text-gray-500'">
+                                                    {{ getDayLabel(day) }}
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <!-- Time Inputs -->
+                                        <div v-if="!schedule.closed" class="flex items-center gap-2 flex-1 animate-fade-in">
+                                            <input type="time" v-model="schedule.start"
+                                                class="bg-gray-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                            <span class="text-gray-500 text-sm">a</span>
+                                            <input type="time" v-model="schedule.end"
+                                                class="bg-gray-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                        </div>
+                                        <div v-else class="flex-1 text-sm text-gray-600 italic">
+                                            Cerrado
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
