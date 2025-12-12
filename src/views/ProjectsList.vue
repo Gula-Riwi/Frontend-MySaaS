@@ -33,12 +33,23 @@
                     class="group relative bg-gray-900 border border-white/10 rounded-2xl p-6 cursor-pointer hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 z-20">
 
                     <div class="flex justify-between items-start mb-4">
-                        <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-2xl">
-                            🏢
-                        </div>
                         <span class="px-3 py-1 bg-white/5 rounded-full text-xs text-gray-400 border border-white/5">
                             {{ project.industry || 'General' }}
                         </span>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity" @click.stop>
+                            <button @click.stop="openEditModal(project)"
+                                class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-indigo-400 transition-colors"
+                                title="Editar">
+                                <font-awesome-icon icon="pen" class="text-xs" />
+                            </button>
+                            <button @click.stop="confirmDelete(project)"
+                                class="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500/20 flex items-center justify-center text-gray-400 hover:text-red-400 transition-colors"
+                                title="Eliminar">
+                                <font-awesome-icon icon="trash" class="text-xs" />
+                            </button>
+                        </div>
                     </div>
 
                     <h3 class="text-xl font-bold text-white mb-1">{{ project.name }}</h3>
@@ -77,7 +88,8 @@
             <div
                 class="bg-gray-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden animate-fade-in-up">
                 <div class="p-6 border-b border-white/10">
-                    <h3 class="text-4xl tracking-wide font-league font-bold text-white">Nuevo Proyecto</h3>
+                    <h3 class="text-4xl tracking-wide font-league font-bold text-white">{{ isEditing ? 'Editar Proyecto'
+                        : 'Nuevo Proyecto' }}</h3>
                     <p class="text-gray-400 text-sm mt-1">Completa la información de tu negocio</p>
                 </div>
 
@@ -146,8 +158,8 @@
                             negocio.</p>
 
                         <div class="flex-1 rounded-xl overflow-hidden border border-gray-700 min-h-[300px] relative">
-                            <GoogleMap api-key="YOUR_GOOGLE_MAPS_API_KEY" style="width: 100%; height: 100%"
-                                :center="mapCenter" :zoom="15" @click="handleMapClick">
+                            <GoogleMap :api-key="googleMapsApiKey" style="width: 100%; height: 100%" :center="mapCenter"
+                                :zoom="15" @click="handleMapClick">
                                 <Marker v-if="newProject.latitude && newProject.longitude"
                                     :options="{ position: { lat: newProject.latitude, lng: newProject.longitude } }" />
                             </GoogleMap>
@@ -166,13 +178,13 @@
                         </div>
 
                         <div class="flex justify-end gap-3 pt-4 mt-auto">
-                            <button type="button" @click="showCreateModal = false"
+                            <button type="button" @click="closeModal"
                                 class="px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Cancelar</button>
                             <button type="submit" :disabled="isCreating"
                                 class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition-colors flex items-center gap-2">
                                 <span v-if="isCreating"
                                     class="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full"></span>
-                                {{ isCreating ? 'Creando...' : 'Crear Proyecto' }}
+                                {{ isCreating ? 'Guardando...' : (isEditing ? 'Guardar Cambios' : 'Crear Proyecto') }}
                             </button>
                         </div>
                     </div>
@@ -197,9 +209,13 @@ const user = ref({});
 const projects = ref([]);
 const isLoading = ref(true);
 const showCreateModal = ref(false);
+const isEditing = ref(false);
+const editingId = ref(null);
 const isCreating = ref(false);
 
-const mapCenter = ref({ lat: 4.6097, lng: -74.0817 }); // Default: Bogotá
+
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS;
+const mapCenter = ref({ lat: 6.247836486763944, lng: -75.57957695784035 });
 
 const newProject = ref({
     name: '',
@@ -228,8 +244,6 @@ const loadProjects = async () => {
         } else if (response.data && response.data.projects) {
             projects.value = response.data.projects;
         }
-        // Opcional: Podrías guardar 'canCreateMore' para deshabilitar el botón de crear si alcanzó el límite
-        // const canCreate = response.data ? response.data.canCreateMore : response.canCreateMore;
 
     } catch (error) {
         console.error("Error cargando proyectos:", error);
@@ -245,38 +259,99 @@ const handleMapClick = (event) => {
     }
 };
 
+const openEditModal = async (project) => {
+    try {
+        isLoading.value = true;
+        const fullProject = await projectService.getById(project.id);
+
+        // Handle if response is wrapped in data or direct
+        const projectData = fullProject.data || fullProject;
+
+        isEditing.value = true;
+        editingId.value = project.id;
+        newProject.value = {
+            name: projectData.name,
+            industry: projectData.industry,
+            description: projectData.description,
+            address: projectData.address || '',
+            city: projectData.city || '',
+            country: projectData.country || '',
+            latitude: projectData.latitude || null,
+            longitude: projectData.longitude || null
+        };
+
+        // Set map center if project has location
+        if (projectData.latitude && projectData.longitude) {
+            mapCenter.value = { lat: projectData.latitude, lng: projectData.longitude };
+        }
+
+        showCreateModal.value = true;
+    } catch (error) {
+        console.error("Error fetching project details:", error);
+        alert("Error al cargar los detalles del proyecto.");
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const confirmDelete = async (project) => {
+    if (confirm(`¿Estás seguro de que quieres eliminar el proyecto "${project.name}"? Esta acción no se puede deshacer.`)) {
+        try {
+            await projectService.delete(project.id);
+            await loadProjects();
+        } catch (error) {
+            console.error("Error eliminando proyecto:", error);
+            alert("Error al eliminar el proyecto.");
+        }
+    }
+};
+
 const createProject = async () => {
     try {
         isCreating.value = true;
 
         const payload = { ...newProject.value };
-        // Ensure lat/long are numbers or 0 per request requirement if null (though backend allows null in DTO, controller might expect)
-        // Request said: "latitude": 0, "longitude": 0 in example JSON. 
-        // DTO says double? so null is fine, but let's follow JSON example if needed or stick to nulls if backend handles it.
-        // Let's send what we have. API usually handles nulls fine if DTO is nullable.
 
-        const response = await projectService.create(payload);
-        if (response.success) {
+        let response;
+        if (isEditing.value) {
+            response = await projectService.update(editingId.value, payload);
+        } else {
+            response = await projectService.create(payload);
+        }
+
+        if (response.success || (isEditing.value && response)) { // Update might not return success:true in older controllers, but usually does or throws
             await loadProjects();
             showCreateModal.value = false;
-            newProject.value = {
-                name: '',
-                industry: '',
-                description: '',
-                address: '',
-                city: '',
-                country: '',
-                latitude: null,
-                longitude: null
-            };
+            resetForm();
         }
     } catch (error) {
-        console.error("Error creando proyecto:", error);
-        const errorMessage = error.response?.data?.error || "Error al crear el proyecto.";
+        console.error("Error guardando proyecto:", error);
+        const errorMessage = error.response?.data?.error || "Error al guardar el proyecto.";
         alert(errorMessage);
     } finally {
         isCreating.value = false;
     }
+};
+
+const resetForm = () => {
+    newProject.value = {
+        name: '',
+        industry: '',
+        description: '',
+        address: '',
+        city: '',
+        country: '',
+        latitude: null,
+        longitude: null
+    };
+    isEditing.value = false;
+    editingId.value = null;
+};
+
+// Hook into modal close to reset form if canceled
+const closeModal = () => {
+    showCreateModal.value = false;
+    resetForm();
 };
 
 const selectProject = async (project) => {
