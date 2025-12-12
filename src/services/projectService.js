@@ -56,5 +56,37 @@ export default {
     async getPublicProjectEmployees(id) {
         const response = await api.get(`/api/projects/${id}/employees/public`);
         return response.data;
+    },
+
+    // Configuración Adicional
+    async uploadPhoto(id, file) {
+        const formData = new FormData();
+        formData.append('photo', file);
+        const response = await api.post(`/api/projects/${id}/photos`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data;
+    },
+
+    async configureTelegram(id, configData) {
+        const response = await api.patch(`/api/projects/${id}/telegram`, configData);
+        return response.data;
+    },
+
+    // Stub para servicios (mock por ahora)
+    async saveServices(id, services) {
+        // Simular retardo de red
+        await new Promise(resolve => setTimeout(resolve, 800));
+        console.log(`Guardando servicios para proyecto ${id}:`, services);
+        return { success: true, message: "Servicios actualizados (Mock)" };
+    },
+
+    async getServices(id) {
+        // Simular retardo
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Retorna lista vacía o mock
+        return [];
     }
 };

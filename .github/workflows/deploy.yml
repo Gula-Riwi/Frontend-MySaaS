@@ -34,6 +34,7 @@ jobs:
         VITE_DISCORD_CLIENT_ID: ${{ secrets.VITE_DISCORD_CLIENT_ID }}
         VITE_FACEBOOK_APP_ID: ${{ secrets.VITE_FACEBOOK_APP_ID }}
         VITE_ENABLE_FEATURE_X: ${{ secrets.VITE_ENABLE_FEATURE_X }}
+        VITE_GOOGLE_MAPS: ${{ secrets.VITE_GOOGLE_MAPS }}
         
 
     - name: 🧹 Clean old files
