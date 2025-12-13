@@ -9,19 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 📥 Checkout code
+    - name:  Checkout code
       uses: actions/checkout@v3
     
-    - name: 🟢 Setup Node.js
+    - name:  Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
         cache: 'npm'
     
-    - name: 📦 Install dependencies
+    - name:  Install dependencies
       run: npm ci
     
-    - name: 🏗️ Build production
+    - name:  Build production
       run: npm run build
       env:
         VITE_API_URL: ${{ secrets.VITE_API_URL }}
@@ -37,7 +37,7 @@ jobs:
         VITE_GOOGLE_MAPS: ${{ secrets.VITE_GOOGLE_MAPS }}
         
 
-    - name: 🧹 Clean old files
+    - name:  Clean old files
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.VPS_HOST }}
@@ -48,7 +48,7 @@ jobs:
           rm -rf /var/www/MeetLines-Frontend/dist/*
           mkdir -p /var/www/MeetLines-Frontend/dist
     
-    - name: 🚀 Deploy to VPS
+    - name:  Deploy to VPS
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.VPS_HOST }}
