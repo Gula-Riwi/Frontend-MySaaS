@@ -66,7 +66,7 @@
 
                     <h3 class="text-xl font-bold text-white mb-1">{{ project.name }}</h3>
                     <p v-if="project.subdomain" class="text-sm text-indigo-400 mb-4">{{ project.subdomain
-                    }}.meet-lines.com</p>
+                        }}.meet-lines.com</p>
                     <p class="text-sm text-gray-500 line-clamp-2">{{ project.description || 'Sin descripción' }}</p>
 
                     <div
@@ -201,6 +201,7 @@ import botConfigService from '@/services/botConfigService';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import LineShadowText from '@/components/LineShadowText.vue';
 import { GoogleMap, Marker } from 'vue3-google-map';
+import { confirmAction, showError, showSuccess } from '@/utils/alert';
 
 const router = useRouter();
 const user = ref({});
@@ -286,21 +287,26 @@ const openEditModal = async (project) => {
         showCreateModal.value = true;
     } catch (error) {
         console.error("Error fetching project details:", error);
-        alert("Error al cargar los detalles del proyecto.");
+        showError("Error al cargar los detalles del proyecto.");
     } finally {
         isLoading.value = false;
     }
 };
 
 const confirmDelete = async (project) => {
-    if (confirm(`¿Estás seguro de que quieres eliminar el proyecto "${project.name}"? Esta acción no se puede deshacer.`)) {
-        try {
-            await projectService.delete(project.id);
-            await loadProjects();
-        } catch (error) {
-            console.error("Error eliminando proyecto:", error);
-            alert("Error al eliminar el proyecto.");
-        }
+    const isConfirmed = await confirmAction(
+        '¿Eliminar Proyecto?',
+        `¿Estás seguro de que quieres eliminar el proyecto "${project.name}"? Esta acción no se puede deshacer.`
+    );
+    if (!isConfirmed) return;
+
+    try {
+        await projectService.delete(project.id);
+        await loadProjects();
+        showSuccess("Proyecto eliminado con éxito");
+    } catch (error) {
+        console.error("Error eliminando proyecto:", error);
+        showError("Error al eliminar el proyecto.");
     }
 };
 
@@ -316,16 +322,16 @@ const createProject = async () => {
         } else {
             response = await projectService.create(payload);
         }
-
-        if (response.success || (isEditing.value && response)) { // Update might not return success:true in older controllers, but usually does or throws
+        if (response) {
             await loadProjects();
             showCreateModal.value = false;
             resetForm();
+            showSuccess(isEditing.value ? "Proyecto actualizado" : "Proyecto creado exitosamente");
         }
     } catch (error) {
         console.error("Error guardando proyecto:", error);
         const errorMessage = error.response?.data?.error || "Error al guardar el proyecto.";
-        alert(errorMessage);
+        showError(errorMessage);
     } finally {
         isCreating.value = false;
     }
@@ -373,12 +379,26 @@ const selectProject = async (project) => {
     }
 };
 
-const logout = () => {
-    Cookies.remove('auth_token');
-    Cookies.remove('refresh_token');
-    localStorage.clear();
-    router.push('/login');
-};
+const logout = async () => {
+    const isConfirmed = await confirmAction(
+        '¿Cerrar Sesión?',
+        '¿Estás seguro que deseas cerrar sesión?'
+    );
+    if (isConfirmed) {
+        try {
+            const refreshToken = Cookies.get('refresh_token');
+            if (refreshToken) await authService.logout(refreshToken);
+        } catch (e) { console.error(e); }
+        finally {
+            Cookies.remove('auth_token');
+            Cookies.remove('refresh_token');
+            localStorage.clear();
+            router.push('/login');
+
+            showSuccess('Sesión cerrada');
+        }
+    }
+}
 </script>
 
 <style scoped>

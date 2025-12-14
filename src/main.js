@@ -13,13 +13,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faMeta, faWhatsapp, faInstagram, faFacebook, faTelegram } from '@fortawesome/free-brands-svg-icons'
 import { faCheck, faRobot, faUser, faUsers, faTrash, faPen, faCog, faImages,
         faTowerBroadcast, faChartSimple, faClipboardList, faExchangeAlt, 
-        faSignOutAlt, faBars, faTowerCell, faDollarSign, faClock } from '@fortawesome/free-solid-svg-icons'
+        faSignOutAlt, faBars, faTowerCell, faDollarSign, faClock, faBan, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faMeta, faWhatsapp, faInstagram, faCheck, faRobot, faFacebook, faUser, 
     faUsers, faTrash, faPen, faCog, faImages, faTelegram, faTowerBroadcast,faChartSimple,
-    faClipboardList,faExchangeAlt,faSignOutAlt,faBars,faTowerCell,faDollarSign,faClock)
+    faClipboardList,faExchangeAlt,faSignOutAlt,faBars,faTowerCell,faDollarSign,faClock,faBan,faCircleInfo)
 
-const app = createApp(App)
+const app = createApp(App)  
 
 app.use(vue3GoogleLogin, {
     clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID

@@ -62,6 +62,7 @@ import { useRoute, useRouter } from 'vue-router';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import ShimmerButton from '@/components/ShimmerButton.vue';
 import authService from '@/services/authService';
+import { showSuccess } from '@/utils/alert';
 
 const route = useRoute();
 const router = useRouter();
@@ -108,7 +109,7 @@ const resetPassword = async () => {
             confirmPassword: confirmPassword.value
         });
 
-        alert("¡Contraseña cambiada con éxito!");
+        showSuccess("Contraseña cambiada con éxito!");
         router.push('/login');
 
     } catch (error) {
