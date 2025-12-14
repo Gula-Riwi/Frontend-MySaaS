@@ -278,6 +278,7 @@ import { useRoute } from 'vue-router';
 import projectService from '@/services/projectService';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import Sidebar from '@/components/Sidebar.vue';
+import { confirmAction, showSuccess, showError, showToast } from '@/utils/alert';
 
 const route = useRoute();
 const projectId = route.params.projectId;
@@ -337,25 +338,29 @@ const handleFileUpload = async (event) => {
         const response = await projectService.uploadPhoto(projectId, file);
         // Agregar la foto retornada por el backend a la lista
         uploadedPhotos.value.push(response);
-        alert("Foto subida exitosamente");
+        showSuccess("Foto subida exitosamente");
     } catch (error) {
         console.error("Error upload:", error);
-        alert("Error al subir la foto");
+        showError("Error al subir la foto");
     } finally {
         isUploading.value = false;
     }
 };
 
 const deletePhoto = async (photoId) => {
-    if (!confirm("¿Estás seguro de eliminar esta imagen?")) return;
+    const isConfirmed = await confirmAction(
+        '¿Eliminar Foto?',
+        '¿Estás seguro de eliminar esta imagen?'
+    );
+    if (!isConfirmed) return;
 
     try {
         await projectService.deletePhoto(projectId, photoId);
         uploadedPhotos.value = uploadedPhotos.value.filter(p => p.id !== photoId);
-        // alert("Foto eliminada");
+        showSuccess("Foto eliminada exitosamente");
     } catch (error) {
         console.error("Error deleting photo:", error);
-        alert("Error al eliminar la foto");
+        showError("Error al eliminar la foto");
     }
 };
 
@@ -376,12 +381,16 @@ const removeService = async (index) => {
 
     // Si tiene ID, borrar del backend
     if (service.id) {
-        if (!confirm("¿Eliminar este servicio permanentemente?")) return;
+        const isConfirmed = await confirmAction(
+            '¿Eliminar Servicio?',
+            '¿Estás seguro de eliminar este servicio permanentemente?'
+        );
+        if (!isConfirmed) return;
         try {
             await projectService.deleteService(service.id);
         } catch (error) {
             console.error(error);
-            alert("Error al eliminar servicio");
+            showError("Error al eliminar servicio");
             return;
         }
     }
@@ -419,10 +428,10 @@ const saveServices = async () => {
         const updatedServices = await projectService.getProjectServices(projectId);
         services.value = updatedServices;
 
-        alert("Servicios guardados correctamente");
+        showSuccess("Servicios guardados correctamente");
     } catch (error) {
         console.error(error);
-        alert("Error guardando servicios (Ver consola)");
+        showError("Error guardando servicios");
     } finally {
         isSavingServices.value = false;
     }
@@ -433,10 +442,10 @@ const saveWhatsapp = async () => {
     try {
         isSavingWhatsapp.value = true;
         await projectService.configureWhatsapp(projectId, whatsappConfig.value);
-        alert("Configuración de WhatsApp guardada");
+        showSuccess("Configuración de WhatsApp guardada");
     } catch (error) {
         console.error(error);
-        alert("Error guardando configuración de WhatsApp");
+        showError("Error guardando configuración de WhatsApp");
     } finally {
         isSavingWhatsapp.value = false;
     }
@@ -446,10 +455,10 @@ const saveTelegram = async () => {
     try {
         isSavingTelegram.value = true;
         await projectService.configureTelegram(projectId, telegramConfig.value);
-        alert("Configuración de Telegram guardada");
+        showSuccess("Configuración de Telegram guardada");
     } catch (error) {
         console.error(error);
-        alert("Error guardando configuración de Telegram");
+        showError("Error guardando configuración de Telegram");
     } finally {
         isSavingTelegram.value = false;
     }

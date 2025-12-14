@@ -176,6 +176,7 @@ import { ref, onMounted } from 'vue';
 import Sidebar from '../components/Sidebar.vue';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import authService from '@/services/authService';
+import { showError, showToast } from '@/utils/alert';
 
 const profile = ref({});
 const isEditing = ref(false);
@@ -222,10 +223,11 @@ const saveProfile = async () => {
             currentUser.name = response.data.name;
             localStorage.setItem('user', JSON.stringify(currentUser));
             isEditing.value = false;
+            showToast("Perfil actualizado exitosamente");
         }
     } catch (error) {
         console.error("Error actualizando perfil:", error);
-        alert("No se pudo actualizar el perfil.");
+        showError("No se pudo actualizar el perfil.");
     } finally {
         isSaving.value = false;
     }
@@ -246,6 +248,7 @@ const changePassword = async () => {
             passMsgType.value = 'success';
             passForm.value = { currentPassword: '', newPassword: '', confirmNewPassword: '' };
             setTimeout(() => { isChangingPass.value = false; passMsg.value = ''; }, 1500);
+            showToast("Contraseña actualizada exitosamente");
         } else {
             passMsg.value = response.message || "Error al cambiar contraseña.";
             passMsgType.value = 'error';

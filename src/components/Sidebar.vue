@@ -5,7 +5,7 @@
         <!-- Header / Proyecto Actual -->
         <div class="h-20 flex items-center justify-center border-b border-white/10 px-4">
             <div class="text-center w-full">
-                <h3 class="text-2xl font-bold font-league italic tracking-wide truncate text-white">
+                <h3 class="text-4xl font-league italic tracking-wider truncate text-white">
                     {{ currentProject.name || 'Mi Proyecto' }}
                 </h3>
                 <a v-if="currentProject.subdomain" :href="`https://${currentProject.subdomain}.meet-lines.com`"
@@ -115,6 +115,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 import authService from '@/services/authService';
+import { confirmAction, showToast } from '@/utils/alert'; 
 
 const router = useRouter();
 const user = ref({ name: '', email: '', photo: '' });
@@ -173,7 +174,11 @@ const changeProject = () => {
 };
 
 const Logout = async () => {
-    if (confirm('¿Seguro que deseas salir?')) {
+    const isConfirmed = await confirmAction(
+        '¿Cerrar Sesión?', 
+        '¿Estás seguro que deseas salir del panel?'
+    );
+    if (isConfirmed) {
         try {
             const refreshToken = Cookies.get('refresh_token');
             if (refreshToken) await authService.logout(refreshToken);
@@ -183,6 +188,8 @@ const Logout = async () => {
             Cookies.remove('refresh_token'); 
             localStorage.clear();
             router.push('/login');
+
+            showToast('Sesión cerrada', 'success');
         }
     }
 }

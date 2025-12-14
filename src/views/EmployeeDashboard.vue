@@ -234,6 +234,7 @@ import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 import authService from '@/services/authService';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
+import { confirmAction } from '@/utils/alert';
 
 const router = useRouter();
 
@@ -337,22 +338,26 @@ const closeChangePasswordModal = () => {
 };
 
 const handleLogout = async () => {
-    if (confirm('¿Seguro que deseas salir?')) {
-        try {
-            const refreshToken = Cookies.get('refresh_token');
-            if (refreshToken) {
-                await authService.logout(refreshToken);
-            }
-        } catch (e) {
-            console.error('Error en logout:', e);
-        } finally {
-            Cookies.remove('auth_token');
-            Cookies.remove('refresh_token');
-            localStorage.clear();
-            router.push('/employee-login');
+    const isConfirmed = await confirmAction(
+        '¿Cerrar Sesión?',
+        '¿Estás seguro que deseas salir del panel?'
+    );
+    if (!isConfirmed) return;
+
+    try {
+        const refreshToken = Cookies.get('refresh_token');
+        if (refreshToken) {
+            await authService.logout(refreshToken);
         }
+    } catch (e) {
+        console.error('Error en logout:', e);
+    } finally {
+        Cookies.remove('auth_token');
+        Cookies.remove('refresh_token');
+        localStorage.clear();
+        router.push('/employee-login');
     }
-};
+}
 
 onMounted(() => {
     // Cargar datos del usuario desde localStorage

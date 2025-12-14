@@ -7,8 +7,8 @@ export default {
      */
     async getByProject(projectId) {
         // Axios permite pasar parámetros query así: /api/Employees?projectId=...
-        const response = await api.get('/api/Employees', { 
-            params: { projectId } 
+        const response = await api.get('/api/Employees', {
+            params: { projectId }
         });
         return response.data;
     },
@@ -20,6 +20,31 @@ export default {
     async create(employeeData) {
         // employeeData ya debe incluir projectId
         const response = await api.post('/api/Employees', employeeData);
+        return response.data;
+    },
+
+    /**
+     * Actualizar empleado
+     * @param {string} id 
+     * @param {object} data { name, role, area }
+     */
+    async update(id, data) {
+        const response = await api.put(`/api/Employees/${id}`, data);
+        return response.data;
+    },
+
+    /**
+     * Cambiar estado (Habilitar/Deshabilitar)
+     * @param {string} id 
+     * @param {boolean} isActive
+     */
+    async updateStatus(id, isActive) {
+        // Enviar el booleano directamente habilitará Content-Type: application/json
+        const response = await api.patch(`/api/Employees/${id}/status`, isActive, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         return response.data;
     }
 };

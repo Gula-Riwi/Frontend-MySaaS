@@ -148,6 +148,8 @@ import { useRoute } from 'vue-router';
 import { channelService } from '../services/channelService';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import Sidebar from '@/components/Sidebar.vue';
+import { showToast, confirmAction } from '@/utils/alert';
+
 
 const route = useRoute();
 const projectId = route.params.projectId || 'CURRENT_PROJECT_ID'; 
@@ -269,7 +271,11 @@ const saveChannel = async () => {
 };
 
 const deleteChannel = async (id) => {
-    if (!confirm('¿Estás seguro de eliminar este canal?')) return;
+    const isConfirmed = await confirmAction(
+        '¿Eliminar Canal?', 
+        '¿Estás seguro de eliminar este canal?'
+    );
+    if (!isConfirmed) return;
     try {
         await channelService.deleteChannel(id);
         await loadChannels();

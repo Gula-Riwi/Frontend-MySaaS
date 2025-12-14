@@ -3,16 +3,20 @@
         <Sidebar />
         <div class="flex-1 flex flex-col relative bg-blue-950 min-w-0">
 
-            <header class="h-16 md:h-20 flex items-center justify-between px-4 md:px-8 border-b border-white/5 bg-gray-900/50 backdrop-blur-sm z-10 sticky top-0">
+            <header
+                class="h-16 md:h-20 flex items-center justify-between px-4 md:px-8 border-b border-white/5 bg-gray-900/50 backdrop-blur-sm z-10 sticky top-0">
                 <div>
                     <h2 class="text-2xl md:text-4xl tracking-wide font-bold font-league truncate">Gestión de Equipo</h2>
-                    <p class="text-xs md:text-sm text-gray-400 hidden md:block">Administra quién tiene acceso a este proyecto</p>
+                    <p class="text-xs md:text-sm text-gray-400 hidden md:block">Administra quién tiene acceso a este
+                        proyecto</p>
                 </div>
-                
+
                 <button @click="openCreateModal"
                     class="px-3 py-2 md:px-4 md:py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20 text-sm md:text-base">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd"
+                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                            clip-rule="evenodd" />
                     </svg>
                     <span class="hidden md:inline">Nuevo Empleado</span>
                     <span class="md:hidden">Nuevo</span>
@@ -37,43 +41,70 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse whitespace-nowrap">
                             <thead>
-                                <tr class="bg-gray-900/80 text-gray-400 text-xs uppercase tracking-wider border-b border-white/5">
+                                <tr
+                                    class="bg-gray-900/80 text-gray-400 text-xs uppercase tracking-wider border-b border-white/5">
                                     <th class="p-4 font-medium">Nombre / Usuario</th>
                                     <th class="p-4 font-medium hidden md:table-cell">Email</th>
                                     <th class="p-4 font-medium">Rol</th>
                                     <th class="p-4 font-medium">Estado</th>
                                     <th class="p-4 font-medium text-right hidden lg:table-cell">Fecha Ingreso</th>
+                                    <th class="p-4 font-medium text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-white/5">
-                                <tr v-for="emp in employees" :key="emp.id" class="hover:bg-white/5 transition-colors group">
+                                <tr v-for="emp in employees" :key="emp.id"
+                                    class="hover:bg-white/5 transition-colors group">
                                     <td class="p-4">
                                         <div class="font-bold text-white text-sm md:text-base">{{ emp.name }}</div>
                                         <div class="text-xs md:text-sm text-indigo-400">@{{ emp.username }}</div>
                                         <!-- Email visible solo en móvil aquí debajo -->
                                         <div class="md:hidden text-xs text-gray-500 mt-1">{{ emp.email }}</div>
                                     </td>
-                                    
+
                                     <td class="p-4 text-gray-300 hidden md:table-cell">{{ emp.email }}</td>
-                                    
+
                                     <td class="p-4">
-                                        <span class="px-2 py-1 rounded-md text-[10px] md:text-xs font-bold bg-white/10 text-gray-300 border border-white/10 uppercase">
+                                        <span
+                                            class="px-2 py-1 rounded-md text-[10px] md:text-xs font-bold bg-white/10 text-gray-300 border border-white/10 uppercase">
                                             {{ emp.role }}
                                         </span>
                                         <div class="text-xs text-gray-500 mt-1" v-if="emp.area">{{ emp.area }}</div>
                                     </td>
-                                    
+
                                     <td class="p-4">
-                                        <span v-if="emp.isActive" class="text-green-400 flex items-center gap-1 text-xs md:text-sm font-medium">
-                                            <span class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500"></span> Activo
+                                        <span v-if="emp.isActive"
+                                            class="text-green-400 flex items-center gap-1 text-xs md:text-sm font-medium">
+                                            <span class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500"></span>
+                                            Activo
                                         </span>
-                                        <span v-else class="text-red-400 flex items-center gap-1 text-xs md:text-sm font-medium">
-                                            <span class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-red-500"></span> Inactivo
+                                        <span v-else
+                                            class="text-red-400 flex items-center gap-1 text-xs md:text-sm font-medium">
+                                            <span class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-red-500"></span>
+                                            Inactivo
                                         </span>
                                     </td>
-                                    
+
                                     <td class="p-4 text-right text-gray-500 text-sm hidden lg:table-cell">
                                         {{ new Date(emp.createdAt).toLocaleDateString() }}
+                                    </td>
+
+                                    <td class="p-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <!-- Botón Editar -->
+                                            <button @click="openEditModal(emp)"
+                                                class="text-blue-400 hover:text-blue-300 p-2 transition-colors"
+                                                title="Editar">
+                                                <font-awesome-icon :icon="['fas', 'pen']" />
+                                            </button>
+
+                                            <!-- Botón Estado (Toggle) -->
+                                            <button @click="toggleStatus(emp)" class="p-2 transition-colors"
+                                                :class="emp.isActive ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'"
+                                                :title="emp.isActive ? 'Deshabilitar' : 'Habilitar'">
+                                                <font-awesome-icon :icon="['fas', 'ban']" v-if="emp.isActive" />
+                                                <font-awesome-icon :icon="['fas', 'check']" v-else />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -91,13 +122,14 @@
         <div v-if="showModal"
             class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
             @click.self="showModal = false">
-            <div class="bg-gray-900 rounded-2xl w-full max-w-md border border-white/10 shadow-2xl overflow-hidden animate-fade-in-up">
+            <div
+                class="bg-gray-900 rounded-2xl w-full max-w-md border border-white/10 shadow-2xl overflow-hidden animate-fade-in-up">
                 <div class="p-6 border-b border-white/10 flex justify-between items-center">
-                    <h2 class="text-xl font-bold">Agregar Empleado</h2>
+                    <h2 class="text-xl font-bold">{{ isEditing ? 'Editar Empleado' : 'Agregar Empleado' }}</h2>
                     <button @click="showModal = false" class="text-gray-400 hover:text-white text-xl">✕</button>
                 </div>
 
-                <form @submit.prevent="createEmployee" class="p-6 space-y-4">
+                <form @submit.prevent="saveEmployee" class="p-6 space-y-4">
 
                     <!-- Nombre -->
                     <div class="space-y-1">
@@ -109,8 +141,8 @@
                     <!-- Email -->
                     <div class="space-y-1">
                         <label class="text-sm text-gray-400">Email</label>
-                        <input v-model="form.email" type="email" required
-                            class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input v-model="form.email" type="email" required :disabled="isEditing"
+                            class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-indigo-500 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                     </div>
 
                     <!-- Rol y Area (Grid en 1 col móvil, 2 en desktop) -->
@@ -130,12 +162,6 @@
                                 class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-indigo-500 focus:outline-none transition-colors">
                         </div>
                     </div>
-                    
-                    <div class="space-y-1">
-                        <label class="text-sm text-gray-400">Nombre de Usuario</label>
-                        <input v-model="form.username" type="text" required placeholder="Ej: juan.perez"
-                            class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-indigo-500 focus:outline-none transition-colors">
-                    </div>
 
                     <div class="flex justify-end gap-3 pt-4 border-t border-white/10 mt-4">
                         <button type="button" @click="showModal = false"
@@ -144,7 +170,7 @@
                             class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center gap-2">
                             <span v-if="saving"
                                 class="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full"></span>
-                            {{ saving ? 'Guardando...' : 'Crear Usuario' }}
+                            {{ saving ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear Usuario') }}
                         </button>
                     </div>
                 </form>
@@ -160,6 +186,7 @@ import { useRouter } from 'vue-router';
 import Sidebar from '../components/Sidebar.vue';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import employeeService from '@/services/employeeService';
+import { confirmAction, showError, showToast } from '@/utils/alert';
 
 const router = useRouter();
 const employees = ref([]);
@@ -167,10 +194,11 @@ const loading = ref(true);
 const showModal = ref(false);
 const saving = ref(false);
 const projectId = ref('');
+const isEditing = ref(false); // Flag para saber si es edición
+const selectedEmployeeId = ref(null);
 
 const form = ref({
     name: '',
-    username: '',
     email: '',
     role: 'Agente',
     area: ''
@@ -202,29 +230,81 @@ const loadEmployees = async () => {
 };
 
 const openCreateModal = () => {
-    form.value = { name: '', username: '', email: '', role: 'Agente', area: '' };
+    isEditing.value = false;
+    selectedEmployeeId.value = null;
+    form.value = { name: '', email: '', role: 'Agente', area: '' };
     showModal.value = true;
 };
 
-const createEmployee = async () => {
+const openEditModal = (employee) => {
+    isEditing.value = true;
+    selectedEmployeeId.value = employee.id;
+    // Cargar datos en el formulario
+    form.value = {
+        name: employee.name,
+        email: employee.email,
+        role: employee.role || 'Agente',
+        area: employee.area || ''
+    };
+    showModal.value = true;
+};
+
+const saveEmployee = async () => {
     saving.value = true;
     try {
-        const payload = {
-            projectId: projectId.value,
-            ...form.value
-        };
+        if (isEditing.value) {
+            // Lógica de Actualización (PUT)
+            const payload = {
+                name: form.value.name,
+                role: form.value.role,
+                area: form.value.area
+            };
 
-        const response = await employeeService.create(payload);
+            const response = await employeeService.update(selectedEmployeeId.value, payload);
+            if (response.success) {
+                // Actualizar lista localmente o recargar
+                await loadEmployees();
+                showModal.value = false;
+            }
 
-        if (response.success) {
-            await loadEmployees();
-            showModal.value = false;
+        } else {
+            // Lógica de Creación (POST)
+            const payload = {
+                projectId: projectId.value,
+                ...form.value
+            };
+
+            const response = await employeeService.create(payload);
+
+            if (response.success) {
+                await loadEmployees();
+                showModal.value = false;
+                showToast("Empleado guardado con éxito");
+            }
         }
     } catch (error) {
-        console.error("Error creando empleado:", error);
-        alert(error.response?.data?.message || "Error al crear empleado");
+        console.error("Error guardando empleado:", error);
+        showError("Error al guardar empleado");
     } finally {
         saving.value = false;
+    }
+};
+
+const toggleStatus = async (employee) => {
+    const isConfirmed = await confirmAction(
+        '¿Cambiar Estado?',
+        `¿${employee.isActive ? 'Deshabilitar' : 'Habilitar'} a ${employee.name}?`
+    );
+    if (!isConfirmed) return;
+
+    try {
+        await employeeService.updateStatus(employee.id, !employee.isActive);
+        // Actualizar estado localmente
+        employee.isActive = !employee.isActive;
+        showToast("Estado cambiado exitosamente");
+    } catch (error) {
+        console.error("Error changing status:", error);
+        showError("Error al cambiar estado");
     }
 };
 </script>
