@@ -357,7 +357,7 @@ import authService from '@/services/authService';
 import employeeService from '@/services/employeeService';
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
 import ChatWindow from '@/components/ChatWindow.vue';
-import { confirmAction } from '@/utils/alert';
+import { confirmAction, showError, showSuccess, showToast } from '@/utils/alert';
 import { getCurrentSubdomain } from '@/services/tenantService';
 import projectService from '@/services/projectService';
 
@@ -484,8 +484,10 @@ const fetchAssignedAppointments = async () => {
     try {
         const apps = await employeeService.getAppointments(projectId.value);
         appointments.value = apps;
+        showSuccess("Citas cargadas exitosamente");
     } catch (error) {
         console.error("Error fetching appointments:", error);
+        showError("Error al cargar las citas");
     }
 };
 
@@ -496,12 +498,12 @@ const updateAppointmentStatus = async (app, newStatus) => {
 
     try {
         await employeeService.updateAppointmentStatus(projectId.value, app.id, newStatus);
-        // Success
+        showToast("Estado de la cita actualizado exitosamente");
     } catch (error) {
         console.error("Error updating appointment status:", error);
         // Revert
         app.status = originalStatus;
-        alert("Error al actualizar el estado de la cita");
+        showError("Error al actualizar el estado de la cita");
     }
 };
 
