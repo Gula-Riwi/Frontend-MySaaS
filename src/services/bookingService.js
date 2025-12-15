@@ -28,7 +28,7 @@ export default {
      * @param {string} projectId - Project UUID
      */
     async getProjectPublic(projectId) {
-        const response = await api.get(`/api/Projects/${projectId}/public`);
+        const response = await api.get(`/api/projects/${projectId}/details/public`);
         return response.data;
     },
 
