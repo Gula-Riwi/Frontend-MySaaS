@@ -71,6 +71,26 @@
                 </div>
             </form>
 
+            <!-- OAuth Divider -->
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-700"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="bg-gray-900 px-4 text-gray-400">O continúa con</span>
+                </div>
+            </div>
+
+            <!-- Google OAuth Button -->
+            <!-- TODO: Implement backend endpoint /api/client/auth/oauth/google for customer OAuth -->
+            <div class="flex justify-center">
+                <button @click="loginWithGoogle" type="button"
+                    class="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-gray-800 font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg w-full max-w-xs">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google Logo">
+                    <span class="text-sm">Continuar con Google</span>
+                </button>
+            </div>
+
             <!-- Footer -->
             <div class="mt-6 text-center text-sm text-gray-400">
                 <p>¿No tienes cuenta?
@@ -102,6 +122,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import { googleTokenLogin } from 'vue3-google-login';
 
 // Components
 import InteractiveGridPattern from '@/components/InteractiveGridPattern.vue';
@@ -110,6 +132,7 @@ import LineShadowText from '@/components/LineShadowText.vue';
 
 // Services
 import clientAuthService from '@/services/clientAuthService';
+import authService from '@/services/authService';
 
 const router = useRouter();
 
@@ -165,5 +188,53 @@ const handleLogin = async () => {
     } finally {
         isLoading.value = false;
     }
+};
+
+// TODO: Backend needs to implement /api/client/auth/oauth/google endpoint for customer OAuth
+// Currently using business owner OAuth endpoint as temporary workaround
+const loginWithGoogle = () => {
+    errorMsg.value = '';
+
+    googleTokenLogin().then(async (response) => {
+        if (response.access_token) {
+            try {
+                isLoading.value = true;
+                const googleUserInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${response.access_token}` }
+                });
+
+                const user = googleUserInfo.data;
+
+                const oauthData = {
+                    externalProviderId: user.sub,
+                    email: user.email,
+                    name: user.name,
+                    provider: 'Google'
+                };
+
+                // TODO: Replace with clientAuthService.oauthLogin when backend endpoint is ready
+                const apiResponse = await authService.oauthLogin(oauthData);
+
+                if (apiResponse.success && apiResponse.data) {
+                    const { accessToken, refreshToken, name, email, userId } = apiResponse.data;
+                    Cookies.set('customer_token', accessToken, { expires: 1, secure: true, sameSite: 'Strict' });
+                    Cookies.set('customer_refresh_token', refreshToken, { expires: 7, secure: true, sameSite: 'Strict' });
+                    localStorage.setItem('customer', JSON.stringify({ name, email, id: userId, isCustomer: true }));
+                    router.push('/explore');
+                } else {
+                    errorMsg.value = apiResponse.message || "Error al iniciar con Google.";
+                }
+
+            } catch (err) {
+                console.error("Error en proceso Google:", err);
+                errorMsg.value = "No se pudieron obtener los datos de Google.";
+            } finally {
+                isLoading.value = false;
+            }
+        }
+    }).catch(err => {
+        console.error("Popup cerrado o error:", err);
+        isLoading.value = false;
+    });
 };
 </script>
