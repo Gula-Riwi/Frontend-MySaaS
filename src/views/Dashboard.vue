@@ -307,10 +307,10 @@ const loadDashboardData = async () => {
     }
 };
 
-const updateStatus = async (appointmentId, newStatus) => {
+const updateStatus = async (projectId, appointmentId, newStatus) => {
     if (!confirm(`¿Estás seguro de cambiar el estado a ${newStatus}?`)) return;
     try {
-        await appointmentService.updateStatus(appointmentId, newStatus);
+        await appointmentService.updateStatus(projectId, appointmentId, newStatus);
         // Reload specific item or list
         if (project.value) await loadDashboardData();
     } catch (error) {

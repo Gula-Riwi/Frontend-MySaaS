@@ -2,10 +2,10 @@ import api from './api';
 
 const appointmentService = {
     getAll: async (projectId) => {
-        return await api.get(`/projects/${projectId}/appointments`);
+        return await api.get(`/api/projects/${projectId}/appointments`);
     },
-    updateStatus: async (appointmentId, status) => {
-        return await api.put(`/appointments/${appointmentId}/status`, { status });
+    updateStatus: async (projectId, appointmentId, status) => {
+        return await api.patch(`/api/projects/${projectId}/appointments/${appointmentId}/status`, { status });
     }
 };
 
