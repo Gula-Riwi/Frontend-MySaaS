@@ -36,10 +36,22 @@
                     </div>
                 </section>
 
-                <section v-if="aiInsights" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    
-                    <!-- Bot Performance -->
-                    <div class="bg-gray-900 border border-white/10 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
+                <section v-if="aiInsights" class="mb-8">
+                    <!-- MAIN AI HEADER / SUGGESTION -->
+                    <div class="mb-6 p-4 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 flex items-center gap-4">
+                        <div class="h-10 w-10 rounded-full bg-indigo-500 flex items-center justify-center text-xl shrink-0">
+                            🧠
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold text-sm uppercase tracking-wide">Consejo de la IA</h3>
+                            <p class="text-indigo-200 text-lg font-medium leading-tight">
+                                {{ aiInsights.revenue?.suggestion || 'Analizando tu negocio para darte consejos...' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bot Performance (Full Width) -->
+                    <div class="bg-gray-900 border border-white/10 rounded-2xl p-6 hover:border-indigo-500/30 transition-all mb-8">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-white flex items-center gap-2">
                                 🤖 Rendimiento del Bot
@@ -49,7 +61,8 @@
                             </span>
                         </div>
 
-                         <div class="grid grid-cols-2 gap-4 mb-4">
+                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                            <!-- Stats... -->
                             <div class="bg-white/5 rounded-xl p-3 text-center">
                                 <div class="text-2xl font-bold text-white">{{ aiInsights.botPerformance?.totalConversations || 0 }}</div>
                                 <div class="text-xs text-gray-400">Chats Totales</div>
@@ -58,69 +71,92 @@
                                 <div class="text-2xl font-bold text-emerald-400">{{ aiInsights.botPerformance?.appointmentsBooked || 0 }}</div>
                                 <div class="text-xs text-gray-400">Citas Agendadas</div>
                             </div>
+                             <div class="bg-white/5 rounded-xl p-3 text-center">
+                                <div class="text-2xl font-bold text-yellow-400">{{ aiInsights.botPerformance?.customerSatisfactionScore || '5.0' }}</div>
+                                <div class="text-xs text-gray-400">Satisfacción</div>
+                            </div>
+                             <div class="bg-white/5 rounded-xl p-3 text-center">
+                                <div class="text-2xl font-bold text-indigo-400">{{ aiInsights.botPerformance?.averageResponseTime || 0 }}s</div>
+                                <div class="text-xs text-gray-400">Tiempo Resp.</div>
+                            </div>
                         </div>
 
-                        <div class="space-y-3">
-                             <!-- Bot vs Human Bar -->
-                             <div class="space-y-1">
-                                <div class="flex justify-between text-xs text-gray-400">
-                                    <span>Bot: {{ aiInsights.botPerformance?.botConversations || 0 }}</span>
-                                    <span>Humano: {{ aiInsights.botPerformance?.humanConversations || 0 }}</span>
-                                </div>
-                                <div class="h-2 bg-gray-800 rounded-full overflow-hidden flex">
-                                    <div class="h-full bg-indigo-500" :style="`width: ${ (aiInsights.botPerformance?.botConversations / (aiInsights.botPerformance?.totalConversations || 1)) * 100 }%`"></div>
-                                    <div class="h-full bg-purple-500" :style="`width: ${ (aiInsights.botPerformance?.humanConversations / (aiInsights.botPerformance?.totalConversations || 1)) * 100 }%`"></div>
-                                </div>
-                             </div>
-
-                             <!-- Satisfaction -->
-                             <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
-                                <span class="text-sm text-gray-300">⭐ Satisfacción Cliente</span>
-                                <span class="font-bold text-yellow-400">{{ aiInsights.botPerformance?.customerSatisfactionScore || 'N/A' }} / 5.0</span>
-                             </div>
-
-                             <!-- Avg Response Time -->
-                             <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
-                                <span class="text-sm text-gray-300">⚡ Tiempo Resp. Promedio</span>
-                                <span class="font-bold text-white">{{ aiInsights.botPerformance?.averageResponseTime || 0 }}s</span>
-                             </div>
+                        <!-- Bot vs Human Bar -->
+                        <div class="space-y-1 mt-4">
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>🤖 Bot: {{ aiInsights.botPerformance?.botConversations || 0 }}</span>
+                                <span>👨‍💼 Humano: {{ aiInsights.botPerformance?.humanConversations || 0 }}</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden flex">
+                                <div class="h-full bg-indigo-500" :style="`width: ${ (aiInsights.botPerformance?.botConversations / (aiInsights.botPerformance?.totalConversations || 1)) * 100 }%`"></div>
+                                <div class="h-full bg-purple-500" :style="`width: ${ (aiInsights.botPerformance?.humanConversations / (aiInsights.botPerformance?.totalConversations || 1)) * 100 }%`"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Optimization & Staffing -->
-                    <div class="bg-gray-900 border border-white/10 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
-                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            ⚡ Optimización Operativa
-                        </h3>
+                    <!-- SECONDARY ROW: RISK & OPTIMIZATION -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         
-                        <div class="grid grid-cols-2 gap-4">
-                            <!-- Golden Hour -->
-                            <div class="bg-white/5 rounded-xl p-4">
-                                <div class="text-gray-400 text-xs uppercase mb-1">Mejor Hora</div>
-                                <div class="text-xl font-bold text-white">{{ aiInsights.optimization.bestTime || '--:--' }}</div>
-                                <div class="text-indigo-400 text-xs">{{ aiInsights.optimization.bestDay || 'N/A' }}</div>
+                        <!-- 1. Churn Risk (Restored) -->
+                        <div class="bg-gray-900 border border-white/10 rounded-2xl p-6 hover:border-red-500/20 transition-all flex flex-col">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    📉 Riesgo de Fuga
+                                </h3>
+                                <span class="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs font-bold">
+                                    {{ (highRiskClients.length + mediumRiskClients.length) }} En Riesgo
+                                </span>
                             </div>
-                            
-                            <!-- Staffing -->
-                            <div class="bg-white/5 rounded-xl p-4">
-                                <div class="text-gray-400 text-xs uppercase mb-1">Personal</div>
-                                <div :class="aiInsights.staffing.actionRequired ? 'text-red-400' : 'text-green-400'" class="text-xl font-bold">
-                                    {{ aiInsights.staffing.actionRequired ? '⚠️ Alerta' : '✅ Optimo' }}
+
+                            <div class="flex-1 space-y-4">
+                                <div v-if="highRiskClients.length > 0">
+                                    <h4 class="text-xs uppercase text-red-400 font-bold mb-2">🔴 Prioridad Alta</h4>
+                                    <div class="space-y-2">
+                                        <div v-for="(risk, i) in highRiskClients.slice(0,3)" :key="'h'+i" class="flex justify-between text-sm p-2 bg-red-500/10 rounded">
+                                            <span class="text-white">Nivel Crítico</span>
+                                            <span class="text-gray-400">{{ risk.count }} clientes</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="mediumRiskClients.length > 0">
+                                    <h4 class="text-xs uppercase text-orange-400 font-bold mb-2 mt-2">🟠 Riesgo Medio</h4>
+                                    <div class="space-y-2">
+                                        <div v-for="(risk, i) in mediumRiskClients.slice(0,3)" :key="'m'+i" class="flex justify-between text-sm p-2 bg-orange-500/10 rounded">
+                                            <span class="text-white">Alerta</span>
+                                            <span class="text-gray-400">{{ risk.count }} clientes</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="highRiskClients.length === 0 && mediumRiskClients.length === 0" class="text-center py-6 text-gray-500">
+                                    Todo en orden. Clientes felices.
                                 </div>
                             </div>
                         </div>
 
-                         <div v-if="aiInsights.staffing.actionRequired" class="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                            <p class="text-red-300 text-sm flex items-start gap-2">
-                                <span>⚠️</span>
-                                {{ aiInsights.staffing.message }}
-                            </p>
-                        </div>
-                         <div v-else class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-                            <p class="text-green-300 text-sm flex items-start gap-2">
-                                <span>✅</span>
-                                La carga de trabajo está balanceada con el personal actual.
-                            </p>
+                        <!-- 2. Optimization (Existing) -->
+                        <div class="bg-gray-900 border border-white/10 rounded-2xl p-6 hover:border-emerald-500/20 transition-all">
+                             <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                ⚡ Optimización Operativa
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white/5 rounded-xl p-4">
+                                    <div class="text-gray-400 text-xs uppercase mb-1">Mejor Hora</div>
+                                    <div class="text-xl font-bold text-white">{{ aiInsights.optimization?.bestTime || '--:--' }}</div>
+                                    <div class="text-indigo-400 text-xs">{{ aiInsights.optimization?.bestDay || 'N/A' }}</div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-4">
+                                    <div class="text-gray-400 text-xs uppercase mb-1">Personal</div>
+                                    <div :class="aiInsights.staffing?.actionRequired ? 'text-red-400' : 'text-green-400'" class="text-xl font-bold">
+                                        {{ aiInsights.staffing?.actionRequired ? '⚠️ Alerta' : '✅ Optimo' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="aiInsights.staffing?.actionRequired" class="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-300 text-sm">
+                                {{ aiInsights.staffing?.message }}
+                            </div>
+                             <div v-else class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-300 text-sm">
+                                Carga de trabajo balanceada.
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -233,6 +269,21 @@ const isLoading = ref(true);
 const aiInsights = ref(null);
 const ultimosPedidos = ref([]); // Dynamic list
 
+// Computed Logic
+import { computed } from 'vue';
+import Swal from 'sweetalert2';
+
+const highRiskClients = computed(() => {
+    if (!aiInsights.value?.churnRisks) return [];
+    // Adjust logic based on your backend. Assuming RiskLevel matches "Alto"/"High"
+    return aiInsights.value.churnRisks.filter(r => r.riskLevel === 'Alto' || r.riskLevel === 'High' || r.riskLevel >= 3);
+});
+
+const mediumRiskClients = computed(() => {
+    if (!aiInsights.value?.churnRisks) return [];
+    return aiInsights.value.churnRisks.filter(r => r.riskLevel === 'Medio' || r.riskLevel === 'Medium' || r.riskLevel === 2);
+});
+
 // Métricas
 const metricas = ref([
     { id: 'revenue', titulo: 'Oportunidad de Ingresos', valorNum: 0, esMoneda: true, porcentaje: 'N/A', subio: true, sufijo: '' },
@@ -260,9 +311,10 @@ const loadDashboardData = async () => {
             // 1. Load AI Insights
             try {
                 const aiResponse = await aiInsightsService.getProjectInsights(projectId);
-                if (aiResponse.data?.success) {
-                    const data = aiResponse.data.data;
-                    aiInsights.value = data;
+                if (aiResponse.data?.success) { // Or just aiResponse.success if axios interceptor handles data extraction
+                    // Assuming service returns data directly or response.data
+                     const data = aiResponse.data?.data || aiResponse; 
+                     aiInsights.value = data;
 
                     // Map API data to Cards
                     metricas.value[0].valorNum = data.revenue?.totalLostRevenue || 0;
@@ -277,22 +329,19 @@ const loadDashboardData = async () => {
 
             // 2. Load Appointments (Real Data)
             try {
-                // Fetch appointments (assuming getAppointments or similar exists)
-                // If not, we might need to filter by 'recent' or use getAll
                  const apptResponse = await appointmentService.getAll(projectId); 
                  if (apptResponse.data) {
-                     // Sort by CreatedAt desc and take 10
                      const allAppts = Array.isArray(apptResponse.data) ? apptResponse.data : [];
                      ultimosPedidos.value = allAppts
                         .sort((a, b) => new Date(b.startTime) - new Date(a.startTime))
                         .slice(0, 10)
                         .map(a => ({
                             id: a.id,
-                            cliente: a.appUser?.fullName || 'Cliente', // Adapt based on actual DTO
+                            cliente: a.appUser?.fullName || 'Cliente',
                             producto: a.service?.name || 'Servicio General',
                             total: formatCurrency(a.priceSnapshot || 0),
                             estado: a.status,
-                            estadoClass: a.status.toLowerCase(), // Map to clsses
+                            estadoClass: a.status.toLowerCase(),
                             startTime: a.startTime
                         }));
                  }
@@ -308,13 +357,37 @@ const loadDashboardData = async () => {
 };
 
 const updateStatus = async (projectId, appointmentId, newStatus) => {
-    if (!confirm(`¿Estás seguro de cambiar el estado a ${newStatus}?`)) return;
+    const actionText = newStatus === 'confirmed' ? 'confirmar' : 'cancelar';
+    const result = await Swal.fire({
+        title: `¿${actionText.charAt(0).toUpperCase() + actionText.slice(1)} Cita?`,
+        text: `Esta acción notificará al cliente.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: newStatus === 'confirmed' ? '#6366f1' : '#ef4444', 
+        cancelButtonColor: '#374151',
+        confirmButtonText: `Sí, ${actionText}`,
+        cancelButtonText: 'Volver',
+        background: '#1f2937', 
+        color: '#fff'
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
         await appointmentService.updateStatus(projectId, appointmentId, newStatus);
-        // Reload specific item or list
+        
+        await Swal.fire({
+            title: '¡Actualizado!',
+            icon: 'success',
+            background: '#1f2937',
+            color: '#fff',
+            timer: 1500,
+            showConfirmButton: false
+        });
+
         if (project.value) await loadDashboardData();
     } catch (error) {
-        alert('Error al actualizar estado');
+        Swal.fire({ title: 'Error', text: 'No se pudo actualizar', icon: 'error', background: '#1f2937', color: '#fff' });
         console.error(error);
     }
 };
