@@ -347,7 +347,7 @@ const loadDashboardData = async () => {
                         .slice(0, 10)
                         .map(a => ({
                             id: a.id,
-                            cliente: a.appUser?.fullName || 'Cliente',
+                            cliente: a.clientName || 'Cliente',
                             producto: a.serviceName || 'Servicio General',
                             total: formatCurrency(a.price || 0),
                             estado: a.status,
