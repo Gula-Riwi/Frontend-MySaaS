@@ -791,6 +791,53 @@ const saveConfiguration = async () => {
         saving.value = false;
     }
 };
+// Helper to insert variable at cursor position
+const insertVariable = (fieldPath, variable, refKey) => {
+    // This requires us to track refs or just append. 
+    // For simplicity in this deep nested object structure, let's try to find the input by ID or Ref.
+    // But easier: just append to the model if we can't find cursor, or use a simple logic.
+    
+    // Better approach allow passing the model update directly? 
+    // We can't easily pass the 'ref' of a string property in Vue 3 to a function to update it.
+    // We will use a mapping logic or just update the object path directly.
+    
+    // Let's implement a specific handler for each section or a generic one that assumes appending for now 
+    // to avoid complex DOM manipulation in this iteration, 
+    // BUT user wants it "drag-like", so insertion at cursor is expected.
+    
+    const input = document.getElementById(refKey);
+    if (input) {
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const text = input.value;
+        const before = text.substring(0, start);
+        const after = text.substring(end, text.length);
+        
+        // Update Value
+        const newValue = before + variable + after;
+        
+        // Update Model (We need to find *which* model property this matches)
+        // Since we are clicking a button *bound* to a specific field, we can pass the path string?
+        // e.g. updateConfig('receptionConfig.welcomeMessage', newValue)
+        
+        updateConfigPath(fieldPath, newValue);
+        
+        // Restore cursor (next tick)
+        setTimeout(() => {
+            input.focus();
+            input.selectionStart = input.selectionEnd = start + variable.length;
+        }, 0);
+    }
+};
+
+const updateConfigPath = (path, value) => {
+    const parts = path.split('.');
+    let target = config.value;
+    for (let i = 0; i < parts.length - 1; i++) {
+        target = target[parts[i]];
+    }
+    target[parts[parts.length - 1]] = value;
+};
 </script>
 
 <style scoped>
