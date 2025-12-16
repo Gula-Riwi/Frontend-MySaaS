@@ -46,5 +46,40 @@ export default {
             }
         });
         return response.data;
+    },
+    /**
+     * Obtener conversaciones asignadas al empleado
+     * @param {string} projectId 
+     * @param {string} employeeId
+     * @param {object} filters { page, pageSize, etc }
+     */
+    async getConversations(projectId, employeeId, filters = {}) {
+        const response = await api.get(`/api/projects/${projectId}/conversations`, {
+            params: {
+                ...filters,
+                assignedToEmployeeId: employeeId
+            }
+        });
+        return response.data;
+    },
+
+    /**
+     * Obtener citas asignadas al empleado
+     * @param {string} projectId
+     */
+    async getAppointments(projectId) {
+        const response = await api.get(`/api/projects/${projectId}/appointments`);
+        return response.data;
+    },
+
+    /**
+     * Actualizar estado de una cita
+     * @param {string} projectId 
+     * @param {number} appointmentId 
+     * @param {string} status 
+     */
+    async updateAppointmentStatus(projectId, appointmentId, status) {
+        const response = await api.patch(`/api/projects/${projectId}/appointments/${appointmentId}/status`, { status });
+        return response.data;
     }
 };

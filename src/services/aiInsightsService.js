@@ -1,16 +1,34 @@
 import api from './api';
 
 const aiInsightsService = {
-    getProjectInsights(projectId, period = 'month') {
-        return api.get(`/api/projects/${projectId}/ai-insights`, { params: { period } });
+    async getProjectInsights(projectId, period = 'month') {
+        try {
+            const response = await api.get(`/api/projects/${projectId}/ai-insights`, { params: { period } });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching AI insights:', error);
+            throw error;
+        }
     },
 
-    getReactivationCandidates(projectId) {
-        return api.get(`/api/dashboard/${projectId}/reactivation-candidates`);
+    async getReactivationCandidates(projectId) {
+        try {
+            const response = await api.get(`/api/dashboard/${projectId}/reactivation-candidates`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching reactivation candidates:', error);
+            throw error;
+        }
     },
 
-    sendSmartAlertsReport(projectId) {
-        return api.post(`/api/ai-insights/${projectId}/send-report`);
+    async sendSmartAlertsReport(projectId) {
+        try {
+            const response = await api.post(`/api/ai-insights/${projectId}/send-report`);
+            return response.data;
+        } catch (error) {
+            console.error('Error sending smart report:', error);
+            throw error;
+        }
     }
 };
 
