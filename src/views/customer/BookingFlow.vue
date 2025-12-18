@@ -217,14 +217,22 @@ const loadSlots = async () => {
     
     try {
         const serviceId = route.query.serviceId ? parseInt(route.query.serviceId) : undefined;
+        console.log('Loading slots for:', {
+            projectId: route.params.projectId,
+            date: selectedDate.value,
+            serviceId: serviceId
+        });
         const response = await bookingService.getAvailableSlots(
             route.params.projectId,
             selectedDate.value,
             serviceId
         );
+        console.log('Slots API response:', response);
         availableSlots.value = response.data || response || [];
+        console.log('Available slots:', availableSlots.value);
     } catch (err) {
         console.error('Error loading slots:', err);
+        console.error('Error response:', err.response?.data);
     } finally {
         slotsLoading.value = false;
     }
