@@ -255,17 +255,29 @@ const confirmBooking = async () => {
     bookingError.value = '';
     
     try {
+        // Get customer info from localStorage
+        const customerData = JSON.parse(localStorage.getItem('customer') || '{}');
+        
+        if (!customerData.name || !customerData.email) {
+            bookingError.value = 'Por favor inicia sesión para agendar una cita.';
+            isBooking.value = false;
+            return;
+        }
+
         await bookingService.bookAppointment(route.params.projectId, {
             serviceId: route.query.serviceId ? parseInt(route.query.serviceId) : undefined,
             startTime: selectedSlot.value.startTime,
             endTime: selectedSlot.value.endTime,
-            notes: notes.value || undefined
+            userNotes: notes.value || undefined,
+            clientName: customerData.name,
+            clientEmail: customerData.email,
+            clientPhone: customerData.phone || undefined
         });
         
         step.value = 4;
     } catch (err) {
         console.error('Error booking appointment:', err);
-        bookingError.value = err.response?.data?.message || 'Error al agendar la cita. Por favor intenta de nuevo.';
+        bookingError.value = err.response?.data?.error || err.response?.data?.message || 'Error al agendar la cita. Por favor intenta de nuevo.';
     } finally {
         isBooking.value = false;
     }
