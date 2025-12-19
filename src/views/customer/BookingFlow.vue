@@ -256,8 +256,20 @@ const loadSlots = async () => {
 
 const formatTime = (timeString) => {
     if (!timeString) return '';
-    const date = new Date(timeString);
-    return date.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+    // Handle simple time string like "10:00" or "14:30"
+    if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}$/)) {
+        return timeString;
+    }
+    // Handle ISO datetime string
+    try {
+        const date = new Date(timeString);
+        if (!isNaN(date.getTime())) {
+            return date.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        }
+    } catch {
+        // Fall through to return original
+    }
+    return timeString;
 };
 
 const formatDate = (dateString) => {
