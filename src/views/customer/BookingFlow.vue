@@ -228,11 +228,27 @@ const loadSlots = async () => {
             serviceId
         );
         console.log('Slots API response:', response);
-        availableSlots.value = response.data || response || [];
-        console.log('Available slots:', availableSlots.value);
+        
+        // Backend returns { date: "2025-12-19", slots: [...] }
+        // Extract the slots array properly
+        const slotsData = response.slots || response.data?.slots || response.data || response || [];
+        
+        // De-duplicate slots by time (keep first available employee per time)
+        const uniqueSlots = [];
+        const seenTimes = new Set();
+        for (const slot of slotsData) {
+            if (!seenTimes.has(slot.time)) {
+                seenTimes.add(slot.time);
+                uniqueSlots.push(slot);
+            }
+        }
+        
+        availableSlots.value = uniqueSlots;
+        console.log('Available slots (deduplicated):', availableSlots.value);
     } catch (err) {
         console.error('Error loading slots:', err);
         console.error('Error response:', err.response?.data);
+        availableSlots.value = [];
     } finally {
         slotsLoading.value = false;
     }
