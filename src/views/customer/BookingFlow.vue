@@ -292,10 +292,20 @@ const confirmBooking = async () => {
             return;
         }
 
+        // Construct proper ISO datetime from selectedDate and slot.time
+        // slot.time is like "10:00", selectedDate is like "2025-12-19"
+        const slotTime = selectedSlot.value.time; // "10:00"
+        const startDateTime = new Date(`${selectedDate.value}T${slotTime}:00`);
+        
+        // Get service duration (default to 60 minutes if not available)
+        const durationMinutes = service.value?.durationMinutes || 60;
+        const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000);
+
         await bookingService.bookAppointment(route.params.projectId, {
             serviceId: route.query.serviceId ? parseInt(route.query.serviceId) : undefined,
-            startTime: selectedSlot.value.startTime,
-            endTime: selectedSlot.value.endTime,
+            employeeId: selectedSlot.value.employeeId || undefined,
+            startTime: startDateTime.toISOString(),
+            endTime: endDateTime.toISOString(),
             userNotes: notes.value || undefined,
             clientName: customerData.name,
             clientEmail: customerData.email,
